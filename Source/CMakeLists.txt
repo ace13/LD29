@@ -77,5 +77,5 @@ add_executable(LD29 main.cpp ${Base_SOURCES} ${Base_HEADERS} ${Game_SOURCES} ${G
 if (WIN32)
 	target_link_libraries(LD29 ${SFML_LIBRARIES})
 else()
-	target_link_libraries(LD29 ${SFML_LIBRARIES} ${Fontconfig_LIBRARIES})
+	target_link_libraries(LD29 ${SFML_LIBRARIES} ${Fontconfig_LIBRARY})
 endif()
