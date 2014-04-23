@@ -4,6 +4,7 @@
 
 #include "InputSystem.hpp"
 #include "StateMachine.hpp"
+#include "FrameStats.hpp"
 
 class Application
 {
@@ -19,6 +20,7 @@ private:
 	sf::RenderWindow mWindow;
 	InputSystem mInput;
 	StateMachine mState;
+	FrameStats mStats;
 
 	// Non copyable
 	Application(const Application&);

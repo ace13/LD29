@@ -7,7 +7,7 @@ if (MSVC)
     endif ()
 
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MP")
-    add_definitions(-D_CRT_SECURE_NO_DEPRECATE)
+    add_definitions(-D_CRT_SECURE_NO_DEPRECATE -D_UNICODE -DUNICODE)
 elseif (UNIX)
     if (${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
         execute_process(COMMAND ${CMAKE_CXX_COMPILER} -dumpversion OUTPUT_VARIABLE GCC_VERSION)
