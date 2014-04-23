@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 2.6)
 project(LD29)
 
+SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
+
 if (MSVC)
     if (${MSVC_VERSION} VERSION_LESS 12.0)
         message(FATAL_ERROR "You need to compile this project with at least Visual Studio 2013")
