@@ -50,7 +50,8 @@ set(Util_SOURCES
 if (WIN32)
 	set(Util_SOURCES ${Util_SOURCES} Util/FontFinder_Windows.cpp)
 else()
-	find_package(Fontconfig REQUIRED)
+	find_path(Fontconfig_INCLUDE_DIR fontconfig.h)
+	find_library(Fontconfig_LIBRARY NAMES fontconfig)
 
 	include_directories(
 		${Fontconfig_INCLUDE_DIR}
