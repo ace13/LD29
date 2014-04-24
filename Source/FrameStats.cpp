@@ -49,7 +49,7 @@ uint32_t FrameStats::getFPS() const
 
 uint32_t FrameStats::getSmoothFPS() const
 {
-	uint32_t temp;
+	uint32_t temp = 0;
 
 	std::for_each(mFPSes.begin(), mFPSes.end(), [&temp](uint32_t fps) {
 		temp += fps;
@@ -60,7 +60,7 @@ uint32_t FrameStats::getSmoothFPS() const
 
 double FrameStats::getFrameTime() const
 {
-	return std::chrono::duration_cast<std::chrono::duration<double>>(mFrameTimes.back()).count();
+	return std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(mFrameTimes.back()).count();
 }
 
 double FrameStats::getSmoothFrameTime() const
@@ -71,7 +71,7 @@ double FrameStats::getSmoothFrameTime() const
 		temp += it;
 	});
 
-	return std::chrono::duration_cast<std::chrono::duration<double>>(temp / mFrameTimes.size()).count();
+	return std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(temp / mFrameTimes.size()).count();
 }
 
 void FrameStats::frame(const std::chrono::high_resolution_clock::duration& duration)

@@ -3,6 +3,7 @@
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <sstream>
 #include <chrono>
 
 Application::Application() : mState(mInput)
@@ -26,6 +27,10 @@ int Application::run()
 
 	sf::Event ev;
 	sf::Font def = FontFinder::findDefaultFont();
+	sf::Text frameInfo("<Frame Info>", def, 18U);
+	
+	mStats.setSmoothingFactor(FrameStats::Smooth_2x);
+
 	auto framePoint = std::chrono::high_resolution_clock::now();
 
 	try
@@ -57,7 +62,11 @@ int Application::run()
 
 			mState.draw(mWindow);
 
-			///\TODO Frame statistics
+			std::ostringstream ss;
+			ss << "FPS: ~" << mStats.getSmoothFPS() << " (" << mStats.getFPS() << ")\n" << "FrameTime: ~" << mStats.getSmoothFrameTime() << "ms (" << mStats.getFrameTime() << "ms)";
+			frameInfo.setString(ss.str());
+
+			mWindow.draw(frameInfo);
 
 			mWindow.display();
 		}

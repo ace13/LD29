@@ -110,10 +110,10 @@ sf::Font FontFinder::findDefaultFont()
 	return found;
 }
 
-sf::Font FontFinder::findFont(const std::string& wildcard)
+sf::Font FontFinder::findFont(const std::string& wildcard, const std::string& stylecard)
 {
 	auto ret = sf::Font();
-	ret.loadFromFile(getFont(wildcard, "*"));
+	ret.loadFromFile(getFont(wildcard, stylecard));
 
 	return ret;
 }

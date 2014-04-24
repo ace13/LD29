@@ -9,6 +9,7 @@ namespace
 
 InputSystem::InputSystem()
 {
+	///\TODO Move binds somewhere else, probably
 	mBinds["Up"]    = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::W });
 	mBinds["Down"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::S });
 	mBinds["Left"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::A });
@@ -123,6 +124,16 @@ void InputSystem::update(float dt)
 
 		mCurTick -= TICKRATE;
 	}
+}
+
+std::vector<std::string> InputSystem::getValidBinds() const
+{
+	std::vector<std::string> ret;
+	ret.reserve(mBinds.size());
+
+	std::for_each(mBinds.begin(), mBinds.end(), [&ret](std::pair<std::string, Bind>& b) { ret.push_back(b.first); });
+
+	return ret;
 }
 
 InputSystem::Bind InputSystem::operator[](const std::string& bind) const

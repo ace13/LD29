@@ -58,7 +58,9 @@ public:
 
 	void handleEvent(const sf::Event& ev);
 	void update(float dt);
+	
 
+	std::vector<std::string> getValidBinds() const;
 	Bind operator[](const std::string&) const;
 
 private:

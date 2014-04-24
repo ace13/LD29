@@ -9,7 +9,7 @@ public:
 	static void deinit();
 
 	static sf::Font findDefaultFont();
-	static sf::Font findFont(const std::string& familyWildcard);
+	static sf::Font findFont(const std::string& familyWildcard, const std::string& styleWildcard = "*");
 
 private:
 	FontFinder();

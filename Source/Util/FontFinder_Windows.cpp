@@ -129,13 +129,13 @@ void FontFinder::deinit()
 
 sf::Font FontFinder::findDefaultFont()
 {
-	return findFont("Arial (TrueType)");
+	return findFont("Arial (TrueType)", "Regular");
 }
 
-sf::Font FontFinder::findFont(const std::string& wildcard)
+sf::Font FontFinder::findFont(const std::string& wildcard, const std::string& styleWildcard)
 {
 	auto ret = sf::Font();
-	ret.loadFromFile(GetSystemFontFile(wildcard));
+	ret.loadFromFile(GetSystemFontFile(wildcard)); ///\TODO Style choosing, properly.
 
 	return ret;
 }
