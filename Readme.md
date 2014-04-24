@@ -1,7 +1,7 @@
 LD29
 ====
 
-My Ludum Dare #29 entry
+My Ludum Dare #29 entry - Theme still pending so only preparation work here.
 
 Written in C++11 using CMake and SFML.
 
