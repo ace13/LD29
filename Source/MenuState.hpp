@@ -1,6 +1,7 @@
 #pragma once
 
 #include "StateMachine.hpp"
+#include <SFML/Graphics/View.hpp>
 
 class MenuState : public State
 {
@@ -13,4 +14,5 @@ public:
 	void draw(sf::RenderTarget& target);
 
 private:
+	sf::View mMenuView;
 };

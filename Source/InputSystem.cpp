@@ -131,7 +131,7 @@ std::vector<std::string> InputSystem::getValidBinds() const
 	std::vector<std::string> ret;
 	ret.reserve(mBinds.size());
 
-	std::for_each(mBinds.begin(), mBinds.end(), [&ret](std::pair<std::string, Bind>& b) { ret.push_back(b.first); });
+	std::for_each(mBinds.begin(), mBinds.end(), [&ret](const std::pair<std::string, Bind>& b) { ret.push_back(b.first); });
 
 	return ret;
 }

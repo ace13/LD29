@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <memory>
 
 namespace sf { class Event; class RenderTarget; }
 
@@ -10,7 +11,8 @@ class StateMachine;
 class State
 {
 public:
-	virtual ~State();
+	State() : mInput(nullptr) { }
+	virtual ~State() { }
 
 	virtual void update(double dt) = 0;
 	virtual void handleEvent(const sf::Event& ev) = 0;
@@ -20,7 +22,7 @@ protected:
 	InputSystem& getInputs();
 
 private:
-	InputSystem& mInput;
+	InputSystem* mInput;
 
 	friend class StateMachine;
 };
@@ -33,7 +35,7 @@ public:
 
 	void pushState(State*);
 	void popState();
-	State* curState() const;
+	std::shared_ptr<State> curState() const;
 
 	void update(double dt) const;
 	void handleEvent(const sf::Event& ev) const;
@@ -41,7 +43,7 @@ public:
 
 private:
 	InputSystem& mInput;
-	std::vector<State*> mStateStack;
+	std::vector<std::shared_ptr<State>> mStateStack;
 
 	// Non-copyable
 	StateMachine(const StateMachine&);

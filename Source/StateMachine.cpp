@@ -14,7 +14,7 @@ StateMachine::~StateMachine()
 
 void StateMachine::pushState(State* state)
 {
-	mStateStack.push_back(state);
+	mStateStack.push_back(std::shared_ptr<State>(state));
 }
 
 void StateMachine::popState()
@@ -22,7 +22,7 @@ void StateMachine::popState()
 	mStateStack.pop_back();
 }
 
-State* StateMachine::curState() const
+std::shared_ptr<State> StateMachine::curState() const
 {
 	return mStateStack.back();
 }
@@ -30,16 +30,16 @@ State* StateMachine::curState() const
 
 void StateMachine::update(double dt) const
 {
-	std::for_each(mStateStack.rbegin(), mStateStack.rend(), [dt](State* state) { state->update(dt); });
+	std::for_each(mStateStack.rbegin(), mStateStack.rend(), [dt](const std::shared_ptr<State>& state) { state->update(dt); });
 }
 
 void StateMachine::handleEvent(const sf::Event& ev) const
 {
-	std::for_each(mStateStack.rbegin(), mStateStack.rend(), [&ev](State* state) { state->handleEvent(ev); });
+	std::for_each(mStateStack.rbegin(), mStateStack.rend(), [&ev](const std::shared_ptr<State>& state) { state->handleEvent(ev); });
 }
 
 void StateMachine::draw(sf::RenderTarget& target) const
 {
-	std::for_each(mStateStack.rbegin(), mStateStack.rend(), [&target](State* state) { state->draw(target); });
+	std::for_each(mStateStack.rbegin(), mStateStack.rend(), [&target](const std::shared_ptr<State>& state) { state->draw(target); });
 }
 

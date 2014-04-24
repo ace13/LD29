@@ -31,6 +31,8 @@ SpriteSheet& SpriteSheet::operator=(SpriteSheet rhs)
 	std::swap(mTexture, rhs.mTexture);
 	std::swap(mResolution, rhs.mResolution);
 	std::swap(mSize, rhs.mSize);
+
+	return *this;
 }
 
 bool SpriteSheet::loadFromFile(const std::string& path)

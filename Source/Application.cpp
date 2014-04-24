@@ -1,5 +1,6 @@
 #include "Application.hpp"
 #include "Util/FontFinder.hpp"
+#include "MenuState.hpp"
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -25,9 +26,12 @@ int Application::run()
 {
 	mWindow.create(sf::VideoMode(1024, 768), "Ludum Dare #29");
 
+	mState.pushState(new MenuState());
+
 	sf::Event ev;
 	sf::Font def = FontFinder::findDefaultFont();
-	sf::Text frameInfo("<Frame Info>", def, 18U);
+	sf::Text frameInfo("<Frame Info>", def, 12U);
+	sf::View defaultView = mWindow.getDefaultView();
 	
 	mStats.setSmoothingFactor(FrameStats::Smooth_2x);
 
@@ -49,9 +53,15 @@ int Application::run()
 				{
 				case sf::Event::Closed:
 					mWindow.close(); break;
+				case sf::Event::Resized:
+				{
+					defaultView.setSize((sf::Vector2f)mWindow.getSize());
+					defaultView.setCenter(defaultView.getSize() / 2.f);
+				} break;
 				}
 
 				mInput.handleEvent(ev);
+				mState.handleEvent(ev);
 			}
 			
 			double dt = std::chrono::duration_cast<std::chrono::duration<double>>(frameTime).count();
@@ -59,11 +69,12 @@ int Application::run()
 			mState.update(dt);
 
 			mWindow.clear();
-
+			mWindow.setView(defaultView);
+			
 			mState.draw(mWindow);
 
 			std::ostringstream ss;
-			ss << "FPS: ~" << mStats.getSmoothFPS() << " (" << mStats.getFPS() << ")\n" << "FrameTime: ~" << mStats.getSmoothFrameTime() << "ms (" << mStats.getFrameTime() << "ms)";
+			ss << mStats.getSmoothFPS() << " FPS\n" << mStats.getSmoothFrameTime() << "ms";
 			frameInfo.setString(ss.str());
 
 			mWindow.draw(frameInfo);
