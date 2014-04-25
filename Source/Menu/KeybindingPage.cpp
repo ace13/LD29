@@ -172,6 +172,9 @@ void KeybindingPage::draw(sf::RenderTarget& target)
 			auto pos = menuEntry.getPosition();
 			menuEntry.setPosition(pos.x + 125, pos.y);
 
+			if (mRebinding == it.first)
+				menuEntry.setColor(sf::Color(255, 127, 0));
+
 			auto inp = mMenuState->getInputs()[it.first];
 			switch (inp.getType())
 			{
