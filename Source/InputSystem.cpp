@@ -10,91 +10,33 @@ namespace
 InputSystem::InputSystem() : mCurTick(0)
 {
 	///\TODO Move binds somewhere else, probably
-	/*
+	
 	mBinds["Up"]    = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Up });
 	mBinds["Down"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Down });
 	mBinds["Left"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Left });
 	mBinds["Right"] = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Right });
-	mBinds["Enter"] = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Enter });
+	mBinds["Enter"] = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Return });
 	mBinds["Exit"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Escape });
-	*/
+	
+	/*
 	mBinds["Up"]    = Bind(Bind::Type_JoyAxis, Bind::BindData::JA{ 0, sf::Joystick::Axis::Y, true });
 	mBinds["Down"]  = Bind(Bind::Type_JoyAxis, Bind::BindData::JA{ 0, sf::Joystick::Axis::Y, false });
 	mBinds["Left"]  = Bind(Bind::Type_JoyAxis, Bind::BindData::JA{ 0, sf::Joystick::Axis::X, true });
 	mBinds["Right"] = Bind(Bind::Type_JoyAxis, Bind::BindData::JA{ 0, sf::Joystick::Axis::X, false });
 	mBinds["Enter"] = Bind(Bind::Type_JoyButton, Bind::BindData::JB{ 0, 0 });
 	mBinds["Exit"]  = Bind(Bind::Type_JoyButton, Bind::BindData::JB{ 0, 1 });
+	*/
 }
 
 InputSystem::~InputSystem()
 {
 }
 
-void InputSystem::handleEvent(const sf::Event& ev)
-{
-	switch (ev.type)
-	{
-	case sf::Event::JoystickMoved:
-	{
-		auto joymove = ev.joystickMove;
-		float joyvalue = std::abs(joymove.position);
-
-		std::for_each(mBinds.begin(), mBinds.end(), [&joymove, joyvalue](std::map<std::string, Bind>::value_type& it)
-		{
-			auto& bindData = it.second.mBindData.JoyAxis;
-			if (it.second.mBindType == Bind::Type_JoyAxis && bindData.JoystickId == joymove.joystickId && bindData.Axis == joymove.axis)
-			{
-				if ((joymove.position < 0 && bindData.Negative) || (joymove.position > 0 && !bindData.Negative))
-				{
-					it.second.mLastValue = it.second.mValue;
-					it.second.mValue = joyvalue / 100.f;
-				}
-			}
-		});
-
-	} break;
-
-	case sf::Event::JoystickButtonPressed:
-	case sf::Event::JoystickButtonReleased:
-	{
-		auto joybutton = ev.joystickButton;
-		bool pressed = ev.type == sf::Event::JoystickButtonPressed;
-
-		std::for_each(mBinds.begin(), mBinds.end(), [&joybutton, pressed](std::map<std::string, Bind>::value_type& it)
-		{
-			auto& bindData = it.second.mBindData.JoyButton;
-			if (it.second.mBindType == Bind::Type_JoyButton && bindData.JoystickId == joybutton.joystickId && bindData.Button == joybutton.button)
-			{
-				it.second.mLastValue = it.second.mValue;
-				it.second.mValue = pressed;
-			}
-		});
-	} break;
-
-	case sf::Event::KeyPressed:
-	case sf::Event::KeyReleased:
-	{
-		auto key = ev.key;
-		bool pressed = ev.type == sf::Event::KeyPressed;
-
-		std::for_each(mBinds.begin(), mBinds.end(), [&key, pressed](std::map<std::string, Bind>::value_type& it)
-		{
-			auto& bindData = it.second.mBindData.Keyboard;
-			if (it.second.mBindType == Bind::Type_Keyboard && bindData.Key == key.code)
-			{
-				it.second.mLastValue = it.second.mValue;
-				it.second.mValue = pressed;
-			}
-		});
-	} break;
-	}
-}
-
 void InputSystem::update(double dt)
 {
-	mCurTick += dt;
+	//mCurTick += dt;
 
-	while (mCurTick > TICKRATE)
+	//while (mCurTick > TICKRATE)
 	{
 		std::for_each(mBinds.begin(), mBinds.end(), [](std::map<std::string, Bind>::value_type& it)
 		{
@@ -105,7 +47,7 @@ void InputSystem::update(double dt)
 				auto& bindData = it.second.mBindData.JoyAxis;
 				auto val = sf::Joystick::getAxisPosition(bindData.JoystickId, (sf::Joystick::Axis)bindData.Axis);
 
-				if ((val < 0 && bindData.Negative) || (val > 0 && !bindData.Negative))
+				if ((val <= 0 && bindData.Negative) || (val >= 0 && !bindData.Negative))
 				{
 					it.second.mLastValue = it.second.mValue;
 					it.second.mValue = std::abs(val) / 100.f;
@@ -132,7 +74,7 @@ void InputSystem::update(double dt)
 			}
 		});
 
-		mCurTick -= TICKRATE;
+		//mCurTick -= TICKRATE;
 	}
 }
 
@@ -154,6 +96,7 @@ InputSystem::Bind InputSystem::operator[](const std::string& bind) const
 void InputSystem::rebind(const std::string& bind, Bind::Type type, const Bind::BindData& data)
 {
 	mBinds[bind] = Bind(type, data);
+	update(1.0f);
 }
 
 InputSystem::Bind::Bind() : mBindType(Type_Invalid), mValue(0), mLastValue(0)

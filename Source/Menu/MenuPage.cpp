@@ -1,6 +1,7 @@
 #include "MenuPage.hpp"
 #include "../MenuState.hpp"
 #include "../Util/FontFinder.hpp"
+#include "../InputSystem.hpp"
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -57,7 +58,13 @@ float MenuPage::getHideFactor() const
 
 void MenuPage::handleEvent(const sf::Event& ev)
 {
+	
+}
+
+void MenuPage::update(double dt)
+{
 	auto temp = mSelectedIndex;
+	/*
 	switch (ev.type)
 	{
 	case sf::Event::KeyReleased:
@@ -77,7 +84,26 @@ void MenuPage::handleEvent(const sf::Event& ev)
 			}
 		}
 	}
+	*/
 
+	auto& inp = mMenuState->getInputs();
+
+	if (inp["Up"].pressed())
+		--mSelectedIndex;
+	else if (inp["Down"].pressed())
+		++mSelectedIndex;
+	else if (inp["Enter"].pressed())
+	{
+		for (auto& it : mEntries)
+		{
+			if (it.first == mSelectedEntry)
+			{
+				it.second();
+				return;
+			}
+		}
+	}
+		
 	if (temp != mSelectedIndex)
 	{
 		if (mSelectedIndex > 0 && mSelectedIndex >= mEntries.size())
@@ -96,10 +122,6 @@ void MenuPage::handleEvent(const sf::Event& ev)
 			return false;
 		});
 	}
-}
-
-void MenuPage::update(double dt)
-{
 }
 
 void MenuPage::draw(sf::RenderTarget& target)

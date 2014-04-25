@@ -1,5 +1,6 @@
 #include "OptionsPage.hpp"
 #include "KeybindingPage.hpp"
+#include "../InputSystem.hpp"
 #include "../MenuState.hpp"
 #include "../Util/ShapeDraw.hpp"
 
@@ -36,33 +37,32 @@ OptionsMenuPage::~OptionsMenuPage()
 
 void OptionsMenuPage::handleEvent(const sf::Event& ev)
 {
-	if (ev.type == sf::Event::KeyPressed)
-	{
-		if (ev.key.code == sf::Keyboard::Left)
-		{
-			if (mSelectedIndex == 0)
-				mSoundVol = std::max(0, (int)mSoundVol - 1);
-			else if (mSelectedIndex == 1)
-				mMusicVol = std::max(0, (int)mMusicVol - 1);
-		}
-		else if (ev.key.code == sf::Keyboard::Right)
-		{
-			if (mSelectedIndex == 0)
-				mSoundVol = std::min(100, mSoundVol + 1);
-			else if (mSelectedIndex == 1)
-				mMusicVol = std::min(100, mMusicVol + 1);
-		}
-
-		mSoundBar.setValue(mSoundVol);
-		mMusicBar.setValue(mMusicVol);
-	}
-
 	MenuPage::handleEvent(ev);
 }
 
 void OptionsMenuPage::update(double dt)
 {
+	auto& inp = mMenuState->getInputs();
 
+	if (inp["Left"].curValue() > 0.5f)
+	{
+		if (mSelectedIndex == 0)
+			mSoundVol = std::max(0.0, (mSoundVol - inp["Left"].curValue() * dt * 25));
+		else if (mSelectedIndex == 1)
+			mMusicVol = std::max(0.0, (mMusicVol - inp["Left"].curValue() * dt * 25));
+	}
+	else if (inp["Right"].curValue() > 0.5f)
+	{
+		if (mSelectedIndex == 0)
+			mSoundVol = std::min(100.0, (mSoundVol + inp["Right"].curValue() * dt * 25));
+		else if (mSelectedIndex == 1)
+			mMusicVol = std::min(100.0, (mMusicVol + inp["Right"].curValue() * dt * 25));
+	}
+
+	mSoundBar.setValue((int)mSoundVol);
+	mMusicBar.setValue((int)mMusicVol);
+
+	MenuPage::update(dt);
 }
 
 void OptionsMenuPage::draw(sf::RenderTarget& target)
@@ -107,13 +107,13 @@ void OptionsMenuPage::draw(sf::RenderTarget& target)
 		if (i == 0)
 		{
 			char tmp[12];
-			sprintf(tmp, it.first.c_str(), mSoundVol);
+			sprintf(tmp, it.first.c_str(), (int)mSoundVol);
 			menuEntry.setString(tmp);
 		}
 		else if (i == 1)
 		{
 			char tmp[12];
-			sprintf(tmp, it.first.c_str(), mMusicVol);
+			sprintf(tmp, it.first.c_str(), (int)mMusicVol);
 			menuEntry.setString(tmp);
 		}
 		else

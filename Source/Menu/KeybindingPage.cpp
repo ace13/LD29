@@ -4,8 +4,7 @@
 
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
-#include <SFML/Window/Keyboard.hpp>
-#include <SFML/Window/Joystick.hpp>
+#include <SFML/Window/Event.hpp>
 
 namespace
 {
@@ -31,26 +30,26 @@ namespace
 #undef K
 	}
 
-	std::string getAxisName(sf::Joystick::Axis a)
+	std::string getAxisName(sf::Joystick::Axis a, bool neg)
 	{
 		switch (a)
 		{
 		case sf::Joystick::Axis::X:
-			return "LS X";
+			return std::string("LS X") + (neg ? "-" : "+");
 		case sf::Joystick::Axis::Y:
-			return "LS Y";
+			return std::string("LS Y") + (neg ? "-" : "+");
 		case sf::Joystick::Axis::R:
-			return "RS X";
+			return std::string("RS X") + (neg ? "-" : "+");
 		case sf::Joystick::Axis::U:
-			return "RS Y";
+			return std::string("RS Y") + (neg ? "-" : "+");
 		case sf::Joystick::Axis::Z:
-			return "LT";
+			return (neg ? "RT" : "LT");
 		case sf::Joystick::Axis::V:
-			return "RT";
+			return std::string("V") + (neg ? "-" : "+");
 		case sf::Joystick::Axis::PovX:
-			return "POV X";
+			return std::string("POV X") + (neg ? "-" : "+");
 		case sf::Joystick::Axis::PovY:
-			return "POV Y";
+			return std::string("POV Y") + (neg ? "-" : "+");
 		}
 	}
 
@@ -93,12 +92,45 @@ KeybindingPage::~KeybindingPage()
 
 void KeybindingPage::handleEvent(const sf::Event& ev)
 {
-	MenuPage::handleEvent(ev);
+	if (mRebinding.empty())
+		return;
+
+	bool bound = false;
+
+	switch (ev.type)
+	{
+	case sf::Event::KeyPressed:
+		mMenuState->getInputs().rebind(mRebinding, InputSystem::Bind::Type_Keyboard, InputSystem::Bind::BindData::KB{ ev.key.code }); bound = true; break;
+	case sf::Event::JoystickButtonPressed:
+		mMenuState->getInputs().rebind(mRebinding, InputSystem::Bind::Type_JoyButton, InputSystem::Bind::BindData::JB{ ev.joystickButton.joystickId, ev.joystickButton.button }); bound = true; break;
+	case sf::Event::JoystickMoved:
+	{
+		auto m = ev.joystickMove;
+		if (std::abs(m.position) > 75)
+		{
+			mMenuState->getInputs().rebind(mRebinding, InputSystem::Bind::Type_JoyAxis, InputSystem::Bind::BindData::JA{ m.joystickId, m.axis, m.position < 0 });
+			bound = true;
+		}
+	} break;
+	}
+
+	if (bound)
+		mRebinding.clear();
 }
 
 void KeybindingPage::update(double dt)
 {
+	if (!mRebinding.empty())
+		return;
 
+	auto& inp = mMenuState->getInputs();
+
+	if (inp["Enter"].pressed())
+	{
+		mRebinding = mSelectedEntry;
+	}
+
+	MenuPage::update(dt);
 }
 
 void KeybindingPage::draw(sf::RenderTarget& target)
@@ -147,7 +179,7 @@ void KeybindingPage::draw(sf::RenderTarget& target)
 				menuEntry.setString(getKeyName((sf::Keyboard::Key)inp.getData().Keyboard.Key));
 				break;
 			case InputSystem::Bind::Type_JoyAxis:
-				menuEntry.setString(getAxisName((sf::Joystick::Axis)inp.getData().JoyAxis.Axis) + (inp.getData().JoyAxis.Negative ? "-" : "+"));
+				menuEntry.setString(getAxisName((sf::Joystick::Axis)inp.getData().JoyAxis.Axis, inp.getData().JoyAxis.Negative));
 				break;
 			case InputSystem::Bind::Type_JoyButton:
 				menuEntry.setString(getButtonName(inp.getData().JoyButton.Button));

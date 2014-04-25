@@ -6,6 +6,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <sstream>
 #include <chrono>
+#include <thread>
 
 Application::Application() : mState(mInput)
 {
@@ -60,7 +61,7 @@ int Application::run()
 				} break;
 				}
 
-				mInput.handleEvent(ev);
+				//mInput.handleEvent(ev);
 				mState.handleEvent(ev);
 			}
 			
@@ -80,6 +81,8 @@ int Application::run()
 			mWindow.draw(frameInfo);
 
 			mWindow.display();
+
+			std::this_thread::sleep_for(std::chrono::milliseconds(1));
 		}
 
 		return 0;

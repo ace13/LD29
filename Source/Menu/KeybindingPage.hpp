@@ -14,4 +14,5 @@ public:
 
 private:
 	uint8_t mSoundVol, mMusicVol;
+	std::string mRebinding;
 };

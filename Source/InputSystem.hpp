@@ -44,7 +44,8 @@ public:
 
 		inline float curValue() const { return mValue; }
 		inline float lastValue() const { return mLastValue; }
-		inline float delta() const { return curValue() - lastValue(); }
+		inline float delta() const { return mValue - mLastValue; }
+		inline bool pressed() const { return mValue > 0.5f && mLastValue < 0.5f; }
 
 		inline Type getType() const { return mBindType; }
 		inline BindData getData() const { return mBindData; }
@@ -62,7 +63,6 @@ public:
 	InputSystem();
 	~InputSystem();
 
-	void handleEvent(const sf::Event& ev);
 	void update(double dt);
 	
 	std::vector<std::string> getValidBinds() const;

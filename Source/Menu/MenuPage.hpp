@@ -11,11 +11,12 @@
 namespace sf { class Event; }
 class MenuState;
 
+const float ENTRY_PADDING = 16.f;
+const float MENU_POSITION_FACTOR = 0.614f;
+
 class MenuPage
 {
 public:
-	const float ENTRY_PADDING = 16.f;
-	const float MENU_POSITION_FACTOR = 0.614f;
 
 	MenuPage(MenuState* state);
 	MenuPage(const MenuPage&);
@@ -35,6 +36,7 @@ public:
 
 protected:
 	std::vector<std::pair<std::string, std::function<void()> > > mEntries;
+	
 	MenuState* mMenuState;
 	std::string mSelectedEntry;
 	int16_t mSelectedIndex;

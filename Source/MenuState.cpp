@@ -62,6 +62,11 @@ void MenuState::update(double dt)
 			baseHide += page->getWidth();
 		});
 	}
+
+	if (mMenuStack.empty())
+		return;
+
+	mMenuStack.back()->update(dt);
 }
 
 void MenuState::handleEvent(const sf::Event& ev)

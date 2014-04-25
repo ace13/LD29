@@ -16,6 +16,6 @@ public:
 	virtual void draw(sf::RenderTarget& target);
 
 private:
-	uint8_t mSoundVol, mMusicVol;
+	double mSoundVol, mMusicVol;
 	Shapes::RadialProgressBar mSoundBar, mMusicBar;
 };
