@@ -23,11 +23,11 @@ set(Base_HEADERS
 )
 
 set(Game_SOURCES
-
+	Game/Actor.cpp
 )
 
 set(Game_HEADERS
-
+	Game/Actor.hpp
 )
 
 set(Menu_SOURCES
