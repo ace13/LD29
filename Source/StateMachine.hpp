@@ -18,7 +18,6 @@ public:
 	virtual void handleEvent(const sf::Event& ev) = 0;
 	virtual void draw(sf::RenderTarget& target) = 0;
 
-protected:
 	InputSystem& getInputs();
 
 private:

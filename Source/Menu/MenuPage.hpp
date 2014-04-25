@@ -14,6 +14,8 @@ class MenuState;
 class MenuPage
 {
 public:
+	const float ENTRY_PADDING = 16.f;
+
 	MenuPage(MenuState* state);
 	MenuPage(const MenuPage&);
 	MenuPage(MenuPage&&);

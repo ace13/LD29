@@ -2,6 +2,7 @@
 
 #include "StateMachine.hpp"
 #include "Menu/MenuPage.hpp"
+#include <memory>
 #include <vector>
 
 class MenuState : public State
@@ -14,11 +15,11 @@ public:
 	void handleEvent(const sf::Event& ev);
 	void draw(sf::RenderTarget& target);
 
-	void pushPage(const MenuPage&);
+	void pushPage(MenuPage*);
 	void popPage();
 
 private:
-	std::vector<MenuPage> mMenuStack;
+	std::vector<std::shared_ptr<MenuPage>> mMenuStack;
 	float mLerp;
 	bool mDirty;
 };

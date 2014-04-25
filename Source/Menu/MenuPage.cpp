@@ -7,8 +7,6 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <algorithm>
 
-const float ENTRY_PADDING = 16.f;
-
 MenuPage::MenuPage(MenuState* state) : mSelectedIndex(-1), mMenuState(state), mHideFactor(0)
 {
 	
@@ -69,17 +67,14 @@ void MenuPage::handleEvent(const sf::Event& ev)
 			--mSelectedIndex;
 		else if (ev.key.code == sf::Keyboard::Return)
 		{
-			auto found = std::find_if(mEntries.begin(), mEntries.end(), [this](const std::pair<std::string, std::function<void()> >& it) {
+			for (auto& it : mEntries)
+			{
 				if (it.first == mSelectedEntry)
 				{
 					it.second();
-					return true;
+					return;
 				}
-				return false;
-			});
-
-			if (mEntries.empty() || found != mEntries.end())
-				return;
+			}
 		}
 	}
 
@@ -105,9 +100,6 @@ void MenuPage::handleEvent(const sf::Event& ev)
 
 void MenuPage::update(double dt)
 {
-	std::for_each(mEntries.begin(), mEntries.end(), [](const std::pair<std::string, std::function<void()> >& it) {
-		
-	});
 }
 
 void MenuPage::draw(sf::RenderTarget& target)
@@ -134,7 +126,8 @@ void MenuPage::draw(sf::RenderTarget& target)
 
 	std::string selectedEntry = mSelectedEntry;
 
-	std::for_each(mEntries.begin(), mEntries.end(), [&target, &menuEntry, &selectedEntry, textHeight](const std::pair<std::string, std::function<void()> >& it) {
+	float pad = ENTRY_PADDING;
+	std::for_each(mEntries.begin(), mEntries.end(), [&target, &menuEntry, &selectedEntry, textHeight, pad](const std::pair<std::string, std::function<void()> >& it) {
 		menuEntry.setColor(sf::Color::White);
 		menuEntry.setString(it.first);
 		
@@ -143,6 +136,6 @@ void MenuPage::draw(sf::RenderTarget& target)
 
 		target.draw(menuEntry);
 
-		menuEntry.move(0, textHeight + ENTRY_PADDING);
+		menuEntry.move(0, textHeight + pad);
 	});
 }

@@ -1,11 +1,115 @@
 #include "OptionsPage.hpp"
 #include "../MenuState.hpp"
+#include "../Util/ShapeDraw.hpp"
 
-OptionsMenuPage::OptionsMenuPage(MenuState* state) : MenuPage(state)
+#include <SFML/Window/Event.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Text.hpp>
+
+OptionsMenuPage::OptionsMenuPage(MenuState* state) : MenuPage(state), mSoundVol(50), mMusicVol(50)
 {
-	mEntries = { { "Sound: 100%", [](){} }, { "Music: 100%", [](){} }, { "Keybinds", [](){} }, { "Back", [state](){ state->popPage(); } } };
+	mEntries = { { "Sound: %d%%", [](){} }, { "Music: %d%%", [](){} }, { "Keybinds", [](){} }, { "Back", [state](){ state->popPage(); } } };
 }
 
 OptionsMenuPage::~OptionsMenuPage()
 {
+}
+
+void OptionsMenuPage::handleEvent(const sf::Event& ev)
+{
+	if (ev.type == sf::Event::KeyPressed)
+	{
+		if (ev.key.code == sf::Keyboard::Left)
+		{
+			if (mSelectedIndex == 0)
+				mSoundVol = std::max(0, (int)mSoundVol - 1);
+			else if (mSelectedIndex == 1)
+				mMusicVol = std::max(0, (int)mMusicVol - 1);
+		}
+		else if (ev.key.code == sf::Keyboard::Right)
+		{
+			if (mSelectedIndex == 0)
+				mSoundVol = std::min(100, mSoundVol + 1);
+			else if (mSelectedIndex == 1)
+				mMusicVol = std::min(100, mMusicVol + 1);
+		}
+	}
+
+	MenuPage::handleEvent(ev);
+}
+
+void OptionsMenuPage::update(double dt)
+{
+
+}
+
+void OptionsMenuPage::draw(sf::RenderTarget& target)
+{
+	sf::Text menuEntry("<Menu Entry Goes Heere>", mMenuFont, 28U);
+	auto size = target.getView().getSize();
+
+	auto textHeight = menuEntry.getLocalBounds().height;
+	auto num = mEntries.size();
+	auto test = size.y / 2.f;
+
+	auto totalHeight = (textHeight + ENTRY_PADDING) * num;
+
+	sf::RectangleShape menuLine(sf::Vector2f(5, totalHeight * 1.5f));
+	menuLine.setOrigin(2.5f, (totalHeight * 1.5f) / 2.f);
+	menuLine.setPosition(-mHideFactor, test);
+	menuLine.setFillColor(sf::Color(128, 128, 128));
+	target.draw(menuLine);
+
+	Shapes::RadialProgressBar soundBar;
+	soundBar.setMaxValue(100);
+	soundBar.setRadius(10);
+	soundBar.setOutlineColor(sf::Color(75, 75, 75));
+	soundBar.setBackgroundColor(sf::Color(0, 28, 0));
+	soundBar.setForegroundColor(sf::Color(0, 150, 0));
+	soundBar.setValue(mSoundVol);
+	
+	soundBar.setPosition(15 - mHideFactor + 180, test - totalHeight / 2.f + 5);
+	menuEntry.setPosition(15 - mHideFactor, test - totalHeight / 2.f);
+
+	if (mSelectedIndex >= 0)
+	{
+		soundBar.move(0, ((int)(mEntries.size() / 2) - mSelectedIndex) * textHeight);
+		menuEntry.move(0, ((int)(mEntries.size() / 2) - mSelectedIndex) * textHeight);
+	}
+
+	target.draw(soundBar);
+
+	soundBar.move(-5, textHeight + ENTRY_PADDING);
+	soundBar.setValue(mMusicVol);
+
+	target.draw(soundBar);
+
+
+	int i = 0;
+	std::for_each(mEntries.begin(), mEntries.end(), [&target, &menuEntry, this, textHeight, &i](const std::pair<std::string, std::function<void()> >& it) {
+		menuEntry.setColor(sf::Color::White);
+
+		if (i == 0)
+		{
+			char tmp[12];
+			sprintf(tmp, it.first.c_str(), mSoundVol);
+			menuEntry.setString(tmp);
+		}
+		else if (i == 1)
+		{
+			char tmp[12];
+			sprintf(tmp, it.first.c_str(), mMusicVol);
+			menuEntry.setString(tmp);
+		}
+		else
+			menuEntry.setString(it.first);
+
+		if (mSelectedEntry == it.first)
+			menuEntry.setColor(sf::Color::Yellow);
+
+		target.draw(menuEntry);
+
+		menuEntry.move(0, textHeight + ENTRY_PADDING);
+		++i;
+	});
 }

@@ -10,7 +10,7 @@ sf::Font def = FontFinder::findDefaultFont();
 
 MenuState::MenuState() : mDirty(false), mLerp(0)
 {
-	pushPage(MainMenuPage(this));
+	pushPage(new MainMenuPage(this));
 
 	mLerp = 1;
 }
@@ -20,9 +20,9 @@ MenuState::~MenuState()
 
 }
 
-void MenuState::pushPage(const MenuPage& page)
+void MenuState::pushPage(MenuPage* page)
 {
-	mMenuStack.push_back(page);
+	mMenuStack.push_back(std::shared_ptr<MenuPage>(page));
 
 	mDirty = true;
 	mLerp = 0;
@@ -51,17 +51,17 @@ void MenuState::update(double dt)
 		float baseHide = 180;
 		int i = 0;
 
-		std::for_each(mMenuStack.begin(), mMenuStack.end(), [this, baseHide, &i](MenuPage& page) {
+		std::for_each(mMenuStack.begin(), mMenuStack.end(), [this, baseHide, &i](std::shared_ptr<MenuPage>& page) {
 			float hide = -baseHide * i++ - 15;
-			float curHide = page.getHideFactor();
-			page.setHideFactor(curHide + (hide - curHide) * mLerp);
+			float curHide = page->getHideFactor();
+			page->setHideFactor(curHide + (hide - curHide) * mLerp);
 		});
 	}
 }
 
 void MenuState::handleEvent(const sf::Event& ev)
 {
-	mMenuStack.back().handleEvent(ev);
+	mMenuStack.back()->handleEvent(ev);
 }
 
 void MenuState::draw(sf::RenderTarget& target)
@@ -78,5 +78,5 @@ void MenuState::draw(sf::RenderTarget& target)
 	target.draw(title);
 
 	
-	std::for_each(mMenuStack.begin(), mMenuStack.end(), [&target](MenuPage& page) { page.draw(target); });
+	std::for_each(mMenuStack.begin(), mMenuStack.end(), [&target](std::shared_ptr<MenuPage>& page) { page->draw(target); });
 }

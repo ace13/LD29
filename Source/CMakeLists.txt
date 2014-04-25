@@ -48,6 +48,7 @@ set(Util_SOURCES
 	Util/Animation.cpp
 	Util/JSON.cpp
 	Util/QuadTree.cpp
+	Util/ShapeDraw.cpp
 	Util/SpriteSheet.cpp
 )
 
@@ -69,6 +70,7 @@ set(Util_HEADERS
 	Util/FontFinder.hpp
 	Util/JSON.hpp
 	Util/QuadTree.hpp
+	Util/ShapeDraw.hpp
 	Util/SpriteSheet.hpp
 )
 

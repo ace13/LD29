@@ -4,7 +4,7 @@
 
 MainMenuPage::MainMenuPage(MenuState* state) : MenuPage(state)
 {
-	mEntries = { { "New Game", [state](){ } }, { "Options", [state](){ state->pushPage(OptionsMenuPage(state)); } }, { "Quit Game", [state](){ state->popPage(); } } };
+	mEntries = { { "New Game", [state](){ } }, { "Options", [state](){ state->pushPage(new OptionsMenuPage(state)); } }, { "Quit Game", [state](){ state->popPage(); } } };
 }
 
 MainMenuPage::~MainMenuPage()
