@@ -3,6 +3,7 @@
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
+#include <SFML/Graphics/RenderTexture.hpp>
 
 namespace Shapes
 {
@@ -37,6 +38,9 @@ namespace Shapes
 		RadialProgressBar();
 		~RadialProgressBar();
 
+		void setCaching(bool cache);
+		inline bool getCaching() const { return mDoTextureCaching; }
+
 		inline float getMinValue() const { return mMinValue; }
 		inline float getMaxValue() const { return mMaxValue; }
 		inline float getValue() const { return mValue; }
@@ -49,7 +53,7 @@ namespace Shapes
 
 		inline void setMinValue(float min) { mMinValue = min; }
 		inline void setMaxValue(float max) { mMaxValue = max; }
-		inline void setValue(float value) { mValue = value; }
+		void setValue(float value);
 		inline void setRadius(float radius) { mRadius = radius; }
 		inline void setThickness(float thickness) { mThickness = thickness; }
 		inline void setOutlineThickness(float thick) { mOutlineThickness = thick; }
@@ -62,5 +66,8 @@ namespace Shapes
 	private:
 		float mMinValue, mMaxValue, mValue, mRadius, mThickness, mOutlineThickness;
 		sf::Color mBackground, mForeground, mOutlineColor;
+
+		bool mDoTextureCaching;
+		sf::RenderTexture mTextureCache;
 	};
 }

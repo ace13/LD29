@@ -1,6 +1,7 @@
 #pragma once
 
 #include "MenuPage.hpp"
+#include "../Util/ShapeDraw.hpp"
 
 class OptionsMenuPage : public MenuPage
 {
@@ -16,4 +17,5 @@ public:
 
 private:
 	uint8_t mSoundVol, mMusicVol;
+	Shapes::RadialProgressBar mSoundBar, mMusicBar;
 };

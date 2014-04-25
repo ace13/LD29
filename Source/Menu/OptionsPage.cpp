@@ -10,6 +10,24 @@
 OptionsMenuPage::OptionsMenuPage(MenuState* state) : MenuPage(state), mSoundVol(50), mMusicVol(50)
 {
 	mEntries = { { "Sound: %d%%", [](){} }, { "Music: %d%%", [](){} }, { "Keybinds", [state](){ state->pushPage(new KeybindingPage(state)); } }, { "Back", [state](){ state->popPage(); } } };
+
+	mSoundBar.setMaxValue(100);
+	mSoundBar.setRadius(10);
+	mSoundBar.setOutlineColor(sf::Color(75, 75, 75));
+	mSoundBar.setBackgroundColor(sf::Color(0, 28, 0));
+	mSoundBar.setForegroundColor(sf::Color(0, 150, 0));
+	mSoundBar.setValue(mSoundVol);
+	mSoundBar.setOrigin(10, 10);
+	mSoundBar.setCaching(true);
+
+	mMusicBar.setMaxValue(100);
+	mMusicBar.setRadius(10);
+	mMusicBar.setOutlineColor(sf::Color(75, 75, 75));
+	mMusicBar.setBackgroundColor(sf::Color(0, 28, 0));
+	mMusicBar.setForegroundColor(sf::Color(0, 150, 0));
+	mMusicBar.setValue(mMusicVol);
+	mMusicBar.setOrigin(10, 10);
+	mMusicBar.setCaching(true);
 }
 
 OptionsMenuPage::~OptionsMenuPage()
@@ -34,6 +52,9 @@ void OptionsMenuPage::handleEvent(const sf::Event& ev)
 			else if (mSelectedIndex == 1)
 				mMusicVol = std::min(100, mMusicVol + 1);
 		}
+
+		mSoundBar.setValue(mSoundVol);
+		mMusicBar.setValue(mMusicVol);
 	}
 
 	MenuPage::handleEvent(ev);
@@ -61,30 +82,23 @@ void OptionsMenuPage::draw(sf::RenderTarget& target)
 	menuLine.setFillColor(sf::Color(128, 128, 128));
 	target.draw(menuLine);
 
-	Shapes::RadialProgressBar soundBar;
-	soundBar.setMaxValue(100);
-	soundBar.setRadius(10);
-	soundBar.setOutlineColor(sf::Color(75, 75, 75));
-	soundBar.setBackgroundColor(sf::Color(0, 28, 0));
-	soundBar.setForegroundColor(sf::Color(0, 150, 0));
-	soundBar.setValue(mSoundVol);
 	
-	soundBar.setPosition(15 - mHideFactor + 180, test - totalHeight / 2.f + 5);
+	
+	mSoundBar.setPosition(15 - mHideFactor + 180, test - totalHeight / 2.f + 5);
 	menuEntry.setPosition(15 - mHideFactor, test - totalHeight / 2.f);
 
 	if (mSelectedIndex >= 0)
 	{
-		soundBar.move(0, ((int)(mEntries.size() / 2) - mSelectedIndex) * textHeight);
+		mSoundBar.move(0, ((int)(mEntries.size() / 2) - mSelectedIndex) * textHeight);
 		menuEntry.move(0, ((int)(mEntries.size() / 2) - mSelectedIndex) * textHeight);
 	}
 
-	target.draw(soundBar);
+	target.draw(mSoundBar);
 
-	soundBar.move(-5, textHeight + ENTRY_PADDING);
-	soundBar.setValue(mMusicVol);
+	mMusicBar.setPosition(mSoundBar.getPosition());
+	mMusicBar.move(-5, textHeight + ENTRY_PADDING);
 
-	target.draw(soundBar);
-
+	target.draw(mMusicBar);
 
 	int i = 0;
 	std::for_each(mEntries.begin(), mEntries.end(), [&target, &menuEntry, this, textHeight, &i](const std::pair<std::string, std::function<void()> >& it) {
