@@ -1,7 +1,7 @@
 #include "StateMachine.hpp"
 #include <algorithm>
 
-StateMachine::StateMachine(InputSystem& inp) : mInput(inp)
+StateMachine::StateMachine(InputSystem& inp) : mInput(inp), mDirty(false)
 {
 	mStateStack.reserve(3);
 }
@@ -14,12 +14,16 @@ StateMachine::~StateMachine()
 
 void StateMachine::pushState(State* state)
 {
+	mDirty = true;
 	state->mInput = &mInput;
+	state->mMachine = this;
+
 	mStateStack.push_back(std::shared_ptr<State>(state));
 }
 
 void StateMachine::popState()
 {
+	mDirty = true;
 	mStateStack.pop_back();
 }
 
@@ -31,16 +35,31 @@ std::shared_ptr<State> StateMachine::curState() const
 
 void StateMachine::update(double dt) const
 {
-	std::for_each(mStateStack.rbegin(), mStateStack.rend(), [dt](const std::shared_ptr<State>& state) { state->update(dt); });
+	for (auto it = mStateStack.rbegin(); it != mStateStack.rend(); ++it)
+	{
+		(*it)->update(dt);
+		if (mDirty)
+			return;
+	}
 }
 
 void StateMachine::handleEvent(const sf::Event& ev) const
 {
-	std::for_each(mStateStack.rbegin(), mStateStack.rend(), [&ev](const std::shared_ptr<State>& state) { state->handleEvent(ev); });
+	for (auto it = mStateStack.rbegin(); it != mStateStack.rend(); ++it)
+	{
+		(*it)->handleEvent(ev);
+		if (mDirty)
+			return;
+	}
 }
 
 void StateMachine::draw(sf::RenderTarget& target) const
 {
-	std::for_each(mStateStack.rbegin(), mStateStack.rend(), [&target](const std::shared_ptr<State>& state) { state->draw(target); });
+	for (auto it = mStateStack.rbegin(); it != mStateStack.rend(); ++it)
+	{
+		(*it)->draw(target);
+		if (mDirty)
+			return;
+	}
 }
 

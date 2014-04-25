@@ -18,10 +18,12 @@ public:
 	virtual void handleEvent(const sf::Event& ev) = 0;
 	virtual void draw(sf::RenderTarget& target) = 0;
 
-	inline InputSystem& getInputs() { return *mInput; }
+	inline InputSystem& getInputs() const { return *mInput; }
+	inline StateMachine& getStateMachine() const { return *mMachine; }
 
 private:
 	InputSystem* mInput;
+	StateMachine* mMachine;
 
 	friend class StateMachine;
 };
@@ -41,6 +43,7 @@ public:
 	void draw(sf::RenderTarget& target) const;
 
 private:
+	bool mDirty;
 	InputSystem& mInput;
 	std::vector<std::shared_ptr<State>> mStateStack;
 

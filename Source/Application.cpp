@@ -1,6 +1,6 @@
 #include "Application.hpp"
 #include "Util/FontFinder.hpp"
-#include "MenuState.hpp"
+#include "IntroState.hpp"
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -27,7 +27,7 @@ int Application::run()
 {
 	mWindow.create(sf::VideoMode(1024, 768), "Ludum Dare #29");
 
-	mState.pushState(new MenuState());
+	mState.pushState(new IntroState());
 
 	sf::Event ev;
 	sf::Font def = FontFinder::findDefaultFont();
