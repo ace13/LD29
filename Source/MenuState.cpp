@@ -2,6 +2,7 @@
 #include "Util/FontFinder.hpp"
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
 
 #include "Menu/MainMenu.hpp"
@@ -73,6 +74,12 @@ void MenuState::handleEvent(const sf::Event& ev)
 
 void MenuState::draw(sf::RenderTarget& target)
 {
+	if (mMenuStack.empty())
+	{
+		((sf::RenderWindow&)target).close();
+		return;
+	}
+
 	sf::Text title("<Title Goes Here>", def, 64U);
 
 	{
@@ -83,7 +90,6 @@ void MenuState::draw(sf::RenderTarget& target)
 	title.setPosition(target.getView().getSize().x / 2.f, 0);
 
 	target.draw(title);
-
 	
 	std::for_each(mMenuStack.begin(), mMenuStack.end(), [&target](std::shared_ptr<MenuPage>& page) { page->draw(target); });
 }
