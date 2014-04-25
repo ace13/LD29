@@ -4,11 +4,13 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Window/Event.hpp>
 
+#include "Menu/MainMenu.hpp"
+
 sf::Font def = FontFinder::findDefaultFont();
 
 MenuState::MenuState() : mDirty(false), mLerp(0)
 {
-	pushPage(MenuPage(this));
+	pushPage(MainMenuPage(this));
 
 	mLerp = 1;
 }
@@ -50,7 +52,7 @@ void MenuState::update(double dt)
 		int i = 0;
 
 		std::for_each(mMenuStack.begin(), mMenuStack.end(), [this, baseHide, &i](MenuPage& page) {
-			float hide = -baseHide * i++;
+			float hide = -baseHide * i++ - 15;
 			float curHide = page.getHideFactor();
 			page.setHideFactor(curHide + (hide - curHide) * mLerp);
 		});

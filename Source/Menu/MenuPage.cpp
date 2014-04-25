@@ -11,7 +11,7 @@ const float ENTRY_PADDING = 16.f;
 
 MenuPage::MenuPage(MenuState* state) : mSelectedIndex(-1), mMenuState(state), mHideFactor(0)
 {
-	mEntries = { { "New Game", [state](){ state->pushPage(MenuPage(state)); } }, { "Options", [](){} }, { "Quit Game", [state](){ state->popPage(); } } };
+	
 	mMenuFont = FontFinder::findDefaultFont();
 }
 
