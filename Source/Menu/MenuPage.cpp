@@ -109,7 +109,7 @@ void MenuPage::draw(sf::RenderTarget& target)
 	
 	auto textHeight = menuEntry.getLocalBounds().height;
 	auto num = mEntries.size();
-	auto test = size.y / 2.f;
+	auto test = size.y * MENU_POSITION_FACTOR;
 
 	auto totalHeight = (textHeight + ENTRY_PADDING) * num;
 

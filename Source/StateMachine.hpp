@@ -18,7 +18,7 @@ public:
 	virtual void handleEvent(const sf::Event& ev) = 0;
 	virtual void draw(sf::RenderTarget& target) = 0;
 
-	InputSystem& getInputs();
+	inline InputSystem& getInputs() { return *mInput; }
 
 private:
 	InputSystem* mInput;

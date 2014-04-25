@@ -20,19 +20,7 @@ public:
 			Type_Keyboard
 			// Type_MouseButton
 		};
-		
-		Bind();
-		Bind(const Bind& rhs);
-		Bind(Bind&& rhs);
-		~Bind();
 
-		Bind& operator=(Bind);
-
-		inline float curValue() const { return mValue; }
-		inline float lastValue() const { return mLastValue; }
-		inline float delta() const { return curValue() - lastValue(); }
-
-	private:
 		union BindData
 		{
 			struct JA { unsigned int JoystickId, Axis; bool Negative; } JoyAxis;
@@ -45,10 +33,27 @@ public:
 			BindData(JB d) : JoyButton(d) { }
 			BindData(KB d) : Keyboard(d) { }
 			// BindData(MB d) : MouseButton(d) { }
-		} mBindData;
+		};
+		
+		Bind();
+		Bind(const Bind& rhs);
+		Bind(Bind&& rhs);
+		~Bind();
+
+		Bind& operator=(Bind);
+
+		inline float curValue() const { return mValue; }
+		inline float lastValue() const { return mLastValue; }
+		inline float delta() const { return curValue() - lastValue(); }
+
+		inline Type getType() const { return mBindType; }
+		inline BindData getData() const { return mBindData; }
+
+	private:
 		Bind(Type type, BindData data);
 
 		Type mBindType;
+		BindData mBindData;
 		float mValue, mLastValue;
 
 		friend class InputSystem;

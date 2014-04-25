@@ -1,4 +1,5 @@
 #include "OptionsPage.hpp"
+#include "KeybindingPage.hpp"
 #include "../MenuState.hpp"
 #include "../Util/ShapeDraw.hpp"
 
@@ -8,7 +9,7 @@
 
 OptionsMenuPage::OptionsMenuPage(MenuState* state) : MenuPage(state), mSoundVol(50), mMusicVol(50)
 {
-	mEntries = { { "Sound: %d%%", [](){} }, { "Music: %d%%", [](){} }, { "Keybinds", [](){} }, { "Back", [state](){ state->popPage(); } } };
+	mEntries = { { "Sound: %d%%", [](){} }, { "Music: %d%%", [](){} }, { "Keybinds", [state](){ state->pushPage(new KeybindingPage(state)); } }, { "Back", [state](){ state->popPage(); } } };
 }
 
 OptionsMenuPage::~OptionsMenuPage()
@@ -50,7 +51,7 @@ void OptionsMenuPage::draw(sf::RenderTarget& target)
 
 	auto textHeight = menuEntry.getLocalBounds().height;
 	auto num = mEntries.size();
-	auto test = size.y / 2.f;
+	auto test = size.y * MENU_POSITION_FACTOR;
 
 	auto totalHeight = (textHeight + ENTRY_PADDING) * num;
 

@@ -32,9 +32,6 @@ void MenuState::popPage()
 {
 	mMenuStack.pop_back();
 
-	if (mMenuStack.empty())
-		exit(0);
-
 	mDirty = true;
 	mLerp = 0;
 }
@@ -43,24 +40,34 @@ void MenuState::update(double dt)
 {
 	if (mDirty)
 	{
+		if (mMenuStack.empty())
+		{
+			mDirty = false;
+			return;
+		}
+
 		mLerp += dt;
 
 		if (mLerp > 1.f)
 			mDirty = false;
 
-		float baseHide = 180;
+		float baseHide = 0;
 		int i = 0;
 
-		std::for_each(mMenuStack.begin(), mMenuStack.end(), [this, baseHide, &i](std::shared_ptr<MenuPage>& page) {
-			float hide = -baseHide * i++ - 15;
+		std::for_each(mMenuStack.begin(), mMenuStack.end(), [this, &baseHide, &i](std::shared_ptr<MenuPage>& page) {
+			float hide = -baseHide - 15;
 			float curHide = page->getHideFactor();
 			page->setHideFactor(curHide + (hide - curHide) * mLerp);
+			baseHide += page->getWidth();
 		});
 	}
 }
 
 void MenuState::handleEvent(const sf::Event& ev)
 {
+	if (mMenuStack.empty())
+		return;
+
 	mMenuStack.back()->handleEvent(ev);
 }
 

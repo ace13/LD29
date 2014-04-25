@@ -14,6 +14,7 @@ StateMachine::~StateMachine()
 
 void StateMachine::pushState(State* state)
 {
+	state->mInput = &mInput;
 	mStateStack.push_back(std::shared_ptr<State>(state));
 }
 

@@ -32,6 +32,7 @@ set(Game_HEADERS
 
 set(Menu_SOURCES
 	Menu/InGameMenu.cpp
+	Menu/KeybindingPage.cpp
 	Menu/MainMenu.cpp
 	Menu/MenuPage.cpp
 	Menu/OptionsPage.cpp
@@ -39,6 +40,7 @@ set(Menu_SOURCES
 
 set(Menu_HEADERS
 	Menu/InGameMenu.hpp
+	Menu/KeybindingPage.hpp
 	Menu/MainMenu.hpp
 	Menu/MenuPage.hpp
 	Menu/OptionsPage.hpp

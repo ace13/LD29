@@ -15,6 +15,7 @@ class MenuPage
 {
 public:
 	const float ENTRY_PADDING = 16.f;
+	const float MENU_POSITION_FACTOR = 0.614f;
 
 	MenuPage(MenuState* state);
 	MenuPage(const MenuPage&);
@@ -25,6 +26,8 @@ public:
 
 	void setHideFactor(float);
 	float getHideFactor() const;
+
+	inline virtual float getWidth() const { return 180.f; }
 
 	virtual void handleEvent(const sf::Event& ev);
 	virtual void update(double dt);
