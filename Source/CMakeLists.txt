@@ -33,11 +33,13 @@ set(Game_HEADERS
 set(Menu_SOURCES
 	Menu/InGameMenu.cpp
 	Menu/MainMenu.cpp
+	Menu/MenuPage.cpp
 )
 
 set(Menu_HEADERS
 	Menu/InGameMenu.hpp
 	Menu/MainMenu.hpp
+	Menu/MenuPage.hpp
 )
 
 set(Util_SOURCES
