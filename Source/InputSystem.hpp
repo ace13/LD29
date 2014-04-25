@@ -1,6 +1,6 @@
 #pragma once
 
-#include <unordered_map>
+#include <map>
 #include <vector>
 #include <string>
 
@@ -63,15 +63,15 @@ public:
 	~InputSystem();
 
 	void handleEvent(const sf::Event& ev);
-	void update(float dt);
+	void update(double dt);
 	
 	std::vector<std::string> getValidBinds() const;
 	Bind operator[](const std::string&) const;
 	void rebind(const std::string& bind, Bind::Type type, const Bind::BindData& data);
 
 private:
-	std::unordered_map<std::string, Bind> mBinds;
-	float mCurTick;
+	std::map<std::string, Bind> mBinds;
+	double mCurTick;
 
 	// Non-copyable
 	InputSystem(const InputSystem&);

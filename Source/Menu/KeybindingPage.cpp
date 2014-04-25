@@ -5,27 +5,70 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/Joystick.hpp>
 
 namespace
 {
 	std::string getKeyName(sf::Keyboard::Key k)
 	{
-#define K(key) else if (k == sf::Keyboard::key) return #key
-		if (k == sf::Keyboard::KeyCount) return "";
-		K(A); K(B); K(C); K(D); K(E); K(F); K(G); K(H); K(I); K(J); K(K); K(L); K(M); K(N);
-		K(O); K(P); K(Q); K(R); K(S); K(T); K(U); K(V); K(W); K(X); K(Y); K(Z); K(Num0);
-		K(Num1); K(Num2); K(Num3); K(Num4); K(Num5); K(Num6); K(Num7); K(Num8); K(Num9);
-		K(Escape); K(LControl); K(LShift); K(LAlt); K(LSystem); K(RControl); K(RShift);
-		K(RAlt); K(RSystem); K(Menu); K(LBracket); K(RBracket); K(SemiColon); K(Comma);
-		K(Period); K(Quote); K(Slash); K(BackSlash); K(Tilde); K(Equal); K(Dash); K(Space);
-		K(Return); K(BackSpace); K(Tab); K(PageUp); K(PageDown); K(End); K(Home); K(Insert);
-		K(Delete); K(Add); K(Subtract); K(Multiply); K(Divide); K(Left); K(Right); K(Up);
-		K(Down); K(Numpad0); K(Numpad1); K(Numpad2); K(Numpad3); K(Numpad4); K(Numpad5);
-		K(Numpad6); K(Numpad7); K(Numpad8); K(Numpad9); K(F1); K(F2); K(F3); K(F4); K(F5);
-		K(F6); K(F7); K(F8); K(F9); K(F10); K(F11); K(F12); K(F13); K(F14); K(F15); K(Pause);
-#undef K
-		else
+#define K(key) case sf::Keyboard::key: return #key
+		switch (k)
+		{
+			K(A); K(B); K(C); K(D); K(E); K(F); K(G); K(H); K(I); K(J); K(K); K(L); K(M); K(N);
+			K(O); K(P); K(Q); K(R); K(S); K(T); K(U); K(V); K(W); K(X); K(Y); K(Z); K(Num0);
+			K(Num1); K(Num2); K(Num3); K(Num4); K(Num5); K(Num6); K(Num7); K(Num8); K(Num9);
+			K(Escape); K(LControl); K(LShift); K(LAlt); K(LSystem); K(RControl); K(RShift);
+			K(RAlt); K(RSystem); K(Menu); K(LBracket); K(RBracket); K(SemiColon); K(Comma);
+			K(Period); K(Quote); K(Slash); K(BackSlash); K(Tilde); K(Equal); K(Dash); K(Space);
+			K(Return); K(BackSpace); K(Tab); K(PageUp); K(PageDown); K(End); K(Home); K(Insert);
+			K(Delete); K(Add); K(Subtract); K(Multiply); K(Divide); K(Left); K(Right); K(Up);
+			K(Down); K(Numpad0); K(Numpad1); K(Numpad2); K(Numpad3); K(Numpad4); K(Numpad5);
+			K(Numpad6); K(Numpad7); K(Numpad8); K(Numpad9); K(F1); K(F2); K(F3); K(F4); K(F5);
+			K(F6); K(F7); K(F8); K(F9); K(F10); K(F11); K(F12); K(F13); K(F14); K(F15); K(Pause);
+		default:
 			return "";
+		}
+#undef K
+	}
+
+	std::string getAxisName(sf::Joystick::Axis a)
+	{
+		switch (a)
+		{
+		case sf::Joystick::Axis::X:
+			return "LS X";
+		case sf::Joystick::Axis::Y:
+			return "LS Y";
+		case sf::Joystick::Axis::R:
+			return "RS X";
+		case sf::Joystick::Axis::U:
+			return "RS Y";
+		case sf::Joystick::Axis::Z:
+			return "LT";
+		case sf::Joystick::Axis::V:
+			return "RT";
+		case sf::Joystick::Axis::PovX:
+			return "POV X";
+		case sf::Joystick::Axis::PovY:
+			return "POV Y";
+		}
+	}
+
+	std::string getButtonName(uint32_t b)
+	{
+		switch (b)
+		{
+		case 0: return "A";
+		case 1: return "B";
+		case 2: return "X";
+		case 3: return "Y";
+		case 4: return "LB";
+		case 5: return "RB";
+		case 6: return "Back";
+		case 7: return "Start";
+		case 8: return "LS";
+		case 9: return "RS";
+		}
 	}
 }
 
@@ -102,6 +145,12 @@ void KeybindingPage::draw(sf::RenderTarget& target)
 			{
 			case InputSystem::Bind::Type_Keyboard:
 				menuEntry.setString(getKeyName((sf::Keyboard::Key)inp.getData().Keyboard.Key));
+				break;
+			case InputSystem::Bind::Type_JoyAxis:
+				menuEntry.setString(getAxisName((sf::Joystick::Axis)inp.getData().JoyAxis.Axis) + (inp.getData().JoyAxis.Negative ? "-" : "+"));
+				break;
+			case InputSystem::Bind::Type_JoyButton:
+				menuEntry.setString(getButtonName(inp.getData().JoyButton.Button));
 				break;
 			}
 			target.draw(menuEntry);
