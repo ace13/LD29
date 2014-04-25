@@ -41,4 +41,12 @@ include_directories(
     ${SFML_INCLUDE_DIR}
 )
 
+file(GLOB resources "Resources/*")
+if (WIN32)
+    file(COPY ${resources} DESTINATION "${CMAKE_BINARY_DIR}/bin/Debug" PATTERN "runme" EXCLUDE)
+    file(COPY ${resources} DESTINATION "${CMAKE_BINARY_DIR}/bin/Release" PATTERN "runme" EXCLUDE)
+else()
+    file(COPY ${resources} DESTINATION "${CMAKE_BINARY_DIR}/bin")
+endif()
+
 add_subdirectory(Source)
