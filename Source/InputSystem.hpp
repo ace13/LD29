@@ -65,9 +65,9 @@ public:
 	void handleEvent(const sf::Event& ev);
 	void update(float dt);
 	
-
 	std::vector<std::string> getValidBinds() const;
 	Bind operator[](const std::string&) const;
+	void rebind(const std::string& bind, Bind::Type type, const Bind::BindData& data);
 
 private:
 	std::unordered_map<std::string, Bind> mBinds;

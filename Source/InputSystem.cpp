@@ -10,10 +10,10 @@ namespace
 InputSystem::InputSystem()
 {
 	///\TODO Move binds somewhere else, probably
-	mBinds["Up"]    = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::W });
-	mBinds["Down"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::S });
-	mBinds["Left"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::A });
-	mBinds["Right"] = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::D });
+	mBinds["Up"]    = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Up });
+	mBinds["Down"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Down });
+	mBinds["Left"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Left });
+	mBinds["Right"] = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Right });
 }
 
 InputSystem::~InputSystem()
@@ -139,6 +139,11 @@ std::vector<std::string> InputSystem::getValidBinds() const
 InputSystem::Bind InputSystem::operator[](const std::string& bind) const
 {
 	return mBinds.at(bind);
+}
+
+void InputSystem::rebind(const std::string& bind, Bind::Type type, const Bind::BindData& data)
+{
+	mBinds[bind] = Bind(type, data);
 }
 
 InputSystem::Bind::Bind() : mBindType(Type_Invalid), mValue(0), mLastValue(0)
