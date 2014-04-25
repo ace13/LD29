@@ -8,7 +8,6 @@ sf::Font def = FontFinder::findDefaultFont();
 
 MenuState::MenuState()
 {
-	mMenuView.setRotation(22.5f);
 }
 
 MenuState::~MenuState()
