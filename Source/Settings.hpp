@@ -15,7 +15,7 @@ public:
 	template<typename T>
 	static T getSetting(const std::string& section, const std::string& key);
 	template<>
-	static std::string getSetting(const std::string& section, const std::string& key);
+	static std::string getSetting<std::string>(const std::string& section, const std::string& key);
 	template<typename T>
 	static void setSetting(const std::string& section, const std::string& key, T value);
 	template<>
@@ -26,13 +26,13 @@ private:
 };
 
 template<>
-static std::string Settings::getSetting(const std::string& section, const std::string& key)
+std::string Settings::getSetting(const std::string& section, const std::string& key)
 {
 	return sFile.getValue(section, key);
 }
 
 template<typename T>
-static T Settings::getSetting(const std::string& section, const std::string& key)
+T Settings::getSetting(const std::string& section, const std::string& key)
 {
 	std::string data = sFile.getValue(section, key);
 	if (data.empty())
@@ -45,13 +45,13 @@ static T Settings::getSetting(const std::string& section, const std::string& key
 }
 
 template<>
-static void Settings::setSetting<std::string>(const std::string& section, const std::string& key, std::string value)
+void Settings::setSetting<std::string>(const std::string& section, const std::string& key, std::string value)
 {
 	sFile.addSetting(section, key, value);
 }
 
 template<typename T>
-static void Settings::setSetting(const std::string& section, const std::string& key, T value)
+void Settings::setSetting(const std::string& section, const std::string& key, T value)
 {
 	char tmp[256];
 	sprintf(tmp, (std::string("%") + key[0]).c_str(), value);
