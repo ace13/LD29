@@ -2,6 +2,7 @@
 #include "Ground.hpp"
 #include "Tree.hpp"
 #include "Player.hpp"
+#include "Building.hpp"
 #include <random>
 
 World::World() : mQuadTree(sf::FloatRect(-WORLD_HALFWIDTH_PIXELS, -WORLD_HALFHEIGHT_PIXELS, WORLD_WIDTH_PIXELS, WORLD_HEIGHT_PIXELS), 13)
@@ -21,6 +22,11 @@ void World::generateWorld(InputSystem& sys)
 	mPlayer = p;
 
 	mQuadTree.addActor(p);
+
+	auto b = new Building();
+	b->setPosition(sf::Vector2f(-WORLD_HALFHEIGHT_PIXELS + 15, -WORLD_HALFHEIGHT_PIXELS + GROUND_LEVEL * 30 - 14));
+
+	mQuadTree.addActor(b);
 
 	std::random_device rd;
 	std::uniform_int_distribution<int> tree(0, 100);
@@ -45,7 +51,7 @@ void World::generateWorld(InputSystem& sys)
 			g->genOre();
 		}
 
-		if (tree(rd) < 15)
+		if (x > 2 && tree(rd) < 15)
 		{
 			Tree* t = new Tree();
 			t->setPosition(sf::Vector2f(-WORLD_HALFWIDTH_PIXELS + 15 + x * 30, -WORLD_HALFHEIGHT_PIXELS + GROUND_LEVEL * 30 - 14));

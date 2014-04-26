@@ -16,6 +16,7 @@ public:
 	virtual ~Actor() { }
 
 	virtual void update(double dt) = 0;
+	virtual void setPosition(const sf::Vector2f&) = 0;
 	virtual sf::Vector2f getPosition() const = 0;
 	virtual void draw(sf::RenderTarget& target) = 0;
 

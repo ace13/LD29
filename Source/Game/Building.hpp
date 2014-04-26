@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Actor.hpp"
+#include "../Util/SpriteSheet.hpp"
 
 class Building : public Actor
 {
@@ -8,10 +9,12 @@ public:
 	Building();
 	~Building();
 
-	virtual void update(double dt);
-	virtual sf::Vector2f getPosition() const;
-	virtual void draw(sf::RenderTarget& target);
+	void update(double dt);
+	void setPosition(const sf::Vector2f&);
+	sf::Vector2f getPosition() const;
+	void draw(sf::RenderTarget& target);
 
 private:
-
+	SpriteSheet mSheet;
+	sf::Vector2f mPosition;
 };
