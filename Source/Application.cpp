@@ -23,11 +23,13 @@ void Application::init(int argc, char** argv)
 
 }
 
+#include "GameState.hpp"
+
 int Application::run()
 {
 	mWindow.create(sf::VideoMode(1024, 768), "Ludum Dare #29");
 
-	mState.pushState(new IntroState());
+	mState.pushState(new GameState());
 
 	sf::Event ev;
 	sf::Font def = FontFinder::findDefaultFont();

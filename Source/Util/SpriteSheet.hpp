@@ -6,7 +6,7 @@
 class SpriteSheet
 {
 public:
-	SpriteSheet(uint16_t w, uint16_t h);
+	SpriteSheet(uint16_t w = 0, uint16_t h = 0);
 	SpriteSheet(const sf::Vector2u& size);
 	SpriteSheet(const SpriteSheet& rhs);
 	SpriteSheet(SpriteSheet&& rhs);

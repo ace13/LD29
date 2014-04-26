@@ -43,6 +43,16 @@ bool SpriteSheet::loadFromFile(const std::string& path)
 	auto size = (sf::Vector2f)mTexture.getSize();
 	mResolution = sf::Vector2f(size.x / mSize.x, size.y / mSize.y);
 
+	auto floored = sf::Vector2f(std::floor(mResolution.x), std::floor(mResolution.y));
+
+	if (floored != mResolution)
+	{
+		mTexture = sf::Texture();
+		mResolution = sf::Vector2f(0, 0);
+
+		return false;
+	}
+
 	return true;
 }
 
