@@ -81,11 +81,12 @@ SplittableQuadTreeLeaf::~SplittableQuadTreeLeaf()
 
 QuadTreeLeaf* SplittableQuadTreeLeaf::addActor(Actor* actor)
 {
-	if (mBounds.contains(actor->getPosition()))
+	auto pos = actor->getPosition();
+
+	if (mBounds.contains(pos))
 	{
 		if (mHasSplit)
 		{
-			auto pos = actor->getPosition();
 			if (mNW->mBounds.contains(pos))
 				return mNW->addActor(actor);
 			else if (mNE->mBounds.contains(pos))

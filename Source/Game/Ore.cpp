@@ -4,15 +4,15 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
-uint32_t Ore::OreWeight(Type t)
+uint32_t Ore::OreWeight(Type t, float depth)
 {
 	switch (t)
 	{
-	case Iron:    return 50;
-	case Sulfur:  return 20;
-	case Gold:    return 5;
-	case Emerald: return 2;
-	case Diamond: return 1;
+	case Iron:    return (depth < 0.25f ? 25 : 8);
+	case Sulfur:  return (depth < 0.5f ? 8 : 1);
+	case Gold:    return 15;
+	case Emerald: return (depth > 0.6f ? 8 : 2);
+	case Diamond: return (depth > 0.85f ? 25 : 1);
 	}
 }
 

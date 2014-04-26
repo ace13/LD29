@@ -2,6 +2,7 @@
 #include "Ore.hpp";
 #include "../Util/Resources.hpp"
 #include "QuadTree.hpp"
+#include "World.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -36,7 +37,7 @@ void Ground::genOre()
 			Ore::Type oreType = Ore::Max;
 			for (int i = Ore::Max-1; i >= 0; --i)
 			{
-				if (std::uniform_int_distribution<int>(0, 100)(std::random_device()) < Ore::OreWeight((Ore::Type)i))
+				if (std::uniform_int_distribution<int>(0, 100)(std::random_device()) < Ore::OreWeight((Ore::Type)i, ((WORLD_HEIGHT * 15.f)+mPosition.y) / (WORLD_HEIGHT*30.f)))
 				{
 					oreType = (Ore::Type)i;
 					break;

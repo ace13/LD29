@@ -2,11 +2,12 @@
 
 #include "Actor.hpp"
 #include "../Util/SpriteSheet.hpp"
+class InputSystem;
 
 class Player : public Actor
 {
 public:
-	Player();
+	Player(InputSystem& sys);
 	~Player();
 
 	void setPosition(const sf::Vector2f& pos);
@@ -17,5 +18,6 @@ public:
 
 private:
 	SpriteSheet mSheet;
+	InputSystem& mInp;
 	sf::Vector2f mPosition, mSpeed;
 };

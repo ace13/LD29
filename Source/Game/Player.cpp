@@ -1,10 +1,11 @@
 #include "Player.hpp"
 #include "../Util/Resources.hpp"
+#include "../InputSystem.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
-Player::Player()
+Player::Player(InputSystem& sys) : mInp(sys)
 {
 	mSheet = Resources::SpriteSheets["player.png"];
 }
@@ -26,7 +27,9 @@ sf::Vector2f Player::getPosition() const
 
 void Player::update(double dt)
 {
-	
+	sf::Vector2f moveSpeed(mInp["Right"].curValue() - mInp["Left"].curValue(), mInp["Down"].curValue() - mInp["Up"].curValue());
+
+	mPosition += moveSpeed * (float)(dt * 120);
 }
 
 void Player::draw(sf::RenderTarget& target)

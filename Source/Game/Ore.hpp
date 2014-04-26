@@ -16,7 +16,7 @@ public:
 		Max
 	};
 
-	static uint32_t OreWeight(Type t);
+	static uint32_t OreWeight(Type t, float depth);
 
 	Ore(Ground* g, Type t);
 	~Ore();
