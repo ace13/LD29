@@ -66,7 +66,7 @@ int Application::run()
 				mState.handleEvent(ev);
 			}
 			
-			double dt = std::min(0.11, std::chrono::duration_cast<std::chrono::duration<double>>(frameTime).count()); 
+			double dt = std::min(0.11, std::chrono::duration_cast<std::chrono::milliseconds>(frameTime).count() / 1000.0);
 			mInput.update(dt);
 			mState.update(dt);
 

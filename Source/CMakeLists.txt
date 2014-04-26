@@ -21,7 +21,6 @@ set(Base_HEADERS
 )
 
 set(Game_SOURCES
-	Game/Actor.cpp
 	Game/Building.cpp
 	Game/Ground.cpp
 	Game/Ore.cpp

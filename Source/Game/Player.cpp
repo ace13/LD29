@@ -31,11 +31,11 @@ sf::Vector2f Player::getPosition() const
 
 void Player::update(double dt)
 {
-	sf::Vector2f moveSpeed(mInp["Right"].curValue() - mInp["Left"].curValue(), 0); // mInp["Down"].curValue() - mInp["Up"].curValue());
+	sf::Vector2f moveSpeed(mInp["Right"].curValue() - mInp["Left"].curValue(), 0);
 
 	mSpeed.x = mSpeed.x + (moveSpeed.x - mSpeed.x) * dt * 7.5;
 
-	if (mInp["Up"].curValue() > 0.5 && mOnGround)
+	if (mInp["Jump"].curValue() > 0.5 && mOnGround)
 	{
 		mFallSpeed = -6;
 		mOnGround = false;
