@@ -33,9 +33,11 @@ void Player::update(double dt)
 {
 	sf::Vector2f moveSpeed(mInp["Right"].curValue() - mInp["Left"].curValue(), 0); // mInp["Down"].curValue() - mInp["Up"].curValue());
 
+	mSpeed.x = mSpeed.x + (moveSpeed.x - mSpeed.x) * dt * 7.5;
+
 	if (mInp["Up"].curValue() > 0.5 && mOnGround)
 	{
-		mFallSpeed = -5;
+		mFallSpeed = -5.25;
 		mOnGround = false;
 	}
 
@@ -62,10 +64,10 @@ void Player::update(double dt)
 			{
 				if (std::abs(pos.y - mPosition.y) < 27)
 				{
-					if (pos.x < mPosition.x && moveSpeed.x < 0)
-						moveSpeed.x = 0;
-					else if (pos.x > mPosition.x && moveSpeed.x > 0)
-						moveSpeed.x = 0;
+					if (pos.x < mPosition.x && mSpeed.x < 0)
+						mSpeed.x = 0;
+					else if (pos.x > mPosition.x && mSpeed.x > 0)
+						mSpeed.x = 0;
 				}
 				else if (pos.y > mPosition.y)
 				{
@@ -79,7 +81,7 @@ void Player::update(double dt)
 		}
 	}
 
-	mPosition += moveSpeed * (float)(dt * 120);
+	mPosition += mSpeed * (float)(dt * 120);
 
 	if (!mOnGround)
 	{

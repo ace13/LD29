@@ -6,8 +6,8 @@
 const int WORLD_WIDTH = 32;
 const int WORLD_HEIGHT = 32;
 #else
-const int WORLD_WIDTH = 512;
-const int WORLD_HEIGHT = 256;
+const int WORLD_WIDTH = 128;
+const int WORLD_HEIGHT = 64;
 #endif
 
 const int GROUND_LEVEL = 8; // 8 blocks of sky
