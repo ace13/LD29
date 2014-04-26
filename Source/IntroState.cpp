@@ -40,8 +40,9 @@ void IntroState::draw(sf::RenderTarget& target)
 
 	target.draw(introText);
 
-	introText.setString("Made by Alexander \"Ace\" Olofsson for Ludum Dare #29");
-	introText.setCharacterSize(11U);
+	introText.setString("Made by Alexander \"Ace\" Olofsson for Ludum Dare #29 (Beneath the Surface)");
+	introText.setCharacterSize(15U);
+	introText.setColor(sf::Color(128, 128, 128));
 
 	{
 		auto rect = introText.getLocalBounds();

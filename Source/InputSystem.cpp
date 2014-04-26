@@ -69,6 +69,7 @@ InputSystem::InputSystem() : mCurTick(0)
 	mBinds["Left"]  = parseBind(Settings::getSetting<std::string>("input", "sLeft"));
 	mBinds["Right"] = parseBind(Settings::getSetting<std::string>("input", "sRight"));
 	mBinds["Enter"] = parseBind(Settings::getSetting<std::string>("input", "sEnter"));
+	mBinds["Exit"]  = parseBind(Settings::getSetting<std::string>("input", "sExit"));
 
 	/*
 	mBinds["Up"]    = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Up });

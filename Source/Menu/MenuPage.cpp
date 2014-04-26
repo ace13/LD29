@@ -103,6 +103,11 @@ void MenuPage::update(double dt)
 			}
 		}
 	}
+	else if (inp["Exit"].pressed())
+	{
+		mMenuState->popPage();
+		return;
+	}
 		
 	if (temp != mSelectedIndex)
 	{

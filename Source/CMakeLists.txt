@@ -22,12 +22,26 @@ set(Base_HEADERS
 
 set(Game_SOURCES
 	Game/Actor.cpp
+	Game/Building.cpp
+	Game/Ground.cpp
+	Game/Ore.cpp
+	Game/Player.cpp
 	Game/QuadTree.cpp
+	Game/Tool.cpp
+	Game/Tree.cpp
+	Game/World.cpp
 )
 
 set(Game_HEADERS
 	Game/Actor.hpp
+	Game/Building.hpp
+	Game/Ground.hpp
+	Game/Ore.hpp
+	Game/Player.hpp
 	Game/QuadTree.hpp
+	Game/Tool.hpp
+	Game/Tree.hpp
+	Game/World.hpp
 )
 
 set(Menu_SOURCES
@@ -49,6 +63,7 @@ set(Menu_HEADERS
 set(Util_SOURCES
 	Util/Animation.cpp
 	Util/INI.cpp
+	Util/Resources.cpp
 	Util/ShapeDraw.cpp
 	Util/SpriteSheet.cpp
 )
@@ -70,6 +85,7 @@ set(Util_HEADERS
 	Util/Animation.hpp
 	Util/FontFinder.hpp
 	Util/INI.hpp
+	Util/Resources.hpp
 	Util/ShapeDraw.hpp
 	Util/SpriteSheet.hpp
 )

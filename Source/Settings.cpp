@@ -22,6 +22,8 @@ void Settings::loadSettings()
 		setSetting("input", "sRight", "KB 72");
 	if (!hasSetting("input", "sEnter"))
 		setSetting("input", "sEnter", "KB 58");
+	if (!hasSetting("input", "sExit"))
+		setSetting("input", "sExit", "KB 36");
 }
 void Settings::saveSettings()
 {
