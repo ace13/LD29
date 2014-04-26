@@ -14,7 +14,9 @@ Ground::Ground(Type t) : mType(t), mOre(nullptr), mDug(0)
 	mSheet = Resources::SpriteSheets["ground.png"];
 	mBreakSheet = Resources::SpriteSheets["digging.png"];
 
-	mFlip = std::uniform_int_distribution<int>(0, 1)(std::random_device());
+	std::random_device rd;
+	std::uniform_int_distribution<int> dist(0, 1);
+	mFlip = dist(rd);
 }
 
 Ground::~Ground()
@@ -31,14 +33,18 @@ void Ground::genOre()
 	}
 	else
 	{
-		auto ore = std::uniform_int_distribution<int>(0, 25)(std::random_device()) == 0;
+		std::random_device rd;
+		std::uniform_int_distribution<int> dist(0, 25);
+		auto ore = dist(rd) == 0;
 
+		dist = std::uniform_int_distribution<int>(0, 100);
 		if (ore)
 		{
 			Ore::Type oreType = Ore::Max;
 			for (int i = Ore::Max-1; i >= 0; --i)
 			{
-				if (std::uniform_int_distribution<int>(0, 100)(std::random_device()) < Ore::OreWeight((Ore::Type)i, ((WORLD_HEIGHT * 15.f)+mPosition.y) / (WORLD_HEIGHT*30.f)))
+				
+				if (dist(rd) < Ore::OreWeight((Ore::Type)i, ((WORLD_HEIGHT * 15.f)+mPosition.y) / (WORLD_HEIGHT*30.f)))
 				{
 					oreType = (Ore::Type)i;
 					break;
