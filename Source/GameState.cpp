@@ -32,7 +32,7 @@ void GameState::update(double dt)
 
 	mGameView.setCenter(((Actor*)mWorld.getPlayer())->getPosition());
 
-	if (getInputs()["Exit"].pressed())
+	if (getInputs()["MenuExit"].pressed())
 		getStateMachine().pushState(new MenuState(true));
 }
 

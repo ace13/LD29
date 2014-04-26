@@ -14,7 +14,7 @@ InGameMenuPage::~InGameMenuPage()
 
 void InGameMenuPage::update(double dt)
 {
-	if (mMenuState->getInputs()["Exit"].pressed())
+	if (mMenuState->getInputs()["MenuExit"].pressed())
 	{
 		mMenuState->getStateMachine().popState();
 		return;

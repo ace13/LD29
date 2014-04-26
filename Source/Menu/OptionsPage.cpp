@@ -51,19 +51,19 @@ void OptionsMenuPage::update(double dt)
 {
 	auto& inp = mMenuState->getInputs();
 
-	if (inp["Left"].curValue() > 0.5f)
+	if (inp["MenuLeft"].curValue() > 0.5f)
 	{
 		if (mSelectedIndex == 0)
-			mSoundVol = std::max(0.0, (mSoundVol - inp["Left"].curValue() * dt * 25));
+			mSoundVol = std::max(0.0, (mSoundVol - inp["MenuLeft"].curValue() * dt * 25));
 		else if (mSelectedIndex == 1)
-			mMusicVol = std::max(0.0, (mMusicVol - inp["Left"].curValue() * dt * 25));
+			mMusicVol = std::max(0.0, (mMusicVol - inp["MenuLeft"].curValue() * dt * 25));
 	}
-	else if (inp["Right"].curValue() > 0.5f)
+	else if (inp["MenuRight"].curValue() > 0.5f)
 	{
 		if (mSelectedIndex == 0)
-			mSoundVol = std::min(100.0, (mSoundVol + inp["Right"].curValue() * dt * 25));
+			mSoundVol = std::min(100.0, (mSoundVol + inp["MenuRight"].curValue() * dt * 25));
 		else if (mSelectedIndex == 1)
-			mMusicVol = std::min(100.0, (mMusicVol + inp["Right"].curValue() * dt * 25));
+			mMusicVol = std::min(100.0, (mMusicVol + inp["MenuRight"].curValue() * dt * 25));
 	}
 
 	mSoundBar.setValue((int)mSoundVol);

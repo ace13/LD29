@@ -90,7 +90,7 @@ void Player::update(double dt)
 	else if (mFallSpeed > 0)
 		mFallSpeed = 0;
 
-	if (mInp["Enter"].curValue() > 0.5)
+	if (mInp["Dig"].curValue() > 0.5)
 	{
 		auto test = mQT->getAllActors(sf::FloatRect(mPosition.x - 35, mPosition.y - 35, 70, 70));
 

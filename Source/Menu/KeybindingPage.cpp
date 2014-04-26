@@ -125,7 +125,7 @@ void KeybindingPage::update(double dt)
 
 	auto& inp = mMenuState->getInputs();
 
-	if (inp["Enter"].pressed())
+	if (inp["MenuEnter"].pressed())
 	{
 		mRebinding = mSelectedEntry;
 	}

@@ -4,6 +4,8 @@
 #include <vector>
 #include <string>
 
+const float JOYSTICK_DEADZONE = .2f;
+
 namespace sf { class Event; }
 
 class InputSystem

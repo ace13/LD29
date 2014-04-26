@@ -88,11 +88,11 @@ void MenuPage::update(double dt)
 
 	auto& inp = mMenuState->getInputs();
 
-	if (inp["Up"].pressed())
+	if (inp["MenuUp"].pressed())
 		--mSelectedIndex;
-	else if (inp["Down"].pressed())
+	else if (inp["MenuDown"].pressed())
 		++mSelectedIndex;
-	else if (inp["Enter"].pressed())
+	else if (inp["MenuEnter"].pressed())
 	{
 		for (auto& it : mEntries)
 		{
@@ -103,7 +103,7 @@ void MenuPage::update(double dt)
 			}
 		}
 	}
-	else if (inp["Exit"].pressed())
+	else if (inp["MenuExit"].pressed())
 	{
 		mMenuState->popPage();
 		return;

@@ -68,18 +68,24 @@ InputSystem::InputSystem() : mCurTick(0)
 	mBinds["Down"]  = parseBind(Settings::getSetting<std::string>("input", "sDown"));
 	mBinds["Left"]  = parseBind(Settings::getSetting<std::string>("input", "sLeft"));
 	mBinds["Right"] = parseBind(Settings::getSetting<std::string>("input", "sRight"));
-	mBinds["Jump"]  = parseBind(Settings::getSetting<std::string>("input", "sJump"));
-	mBinds["Enter"] = parseBind(Settings::getSetting<std::string>("input", "sEnter"));
-	mBinds["Exit"]  = parseBind(Settings::getSetting<std::string>("input", "sExit"));
 
-	/*
-	mBinds["Up"]    = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Up });
-	mBinds["Down"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Down });
-	mBinds["Left"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Left });
-	mBinds["Right"] = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Right });
-	mBinds["Enter"] = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Return });
-	mBinds["Exit"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Escape });
-	*/
+	mBinds["Jump"]  = parseBind(Settings::getSetting<std::string>("input", "sJump"));
+	mBinds["Dig"]   = parseBind(Settings::getSetting<std::string>("input", "sDig"));
+	mBinds["Use"]   = parseBind(Settings::getSetting<std::string>("input", "sUse"));
+	
+	mBinds["Accept"] = parseBind(Settings::getSetting<std::string>("input", "sAccept"));
+	mBinds["Cancel"] = parseBind(Settings::getSetting<std::string>("input", "sCancel"));
+
+
+	// Menu binds, these are hardcoded
+
+	mBinds["MenuUp"]    = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Up });
+	mBinds["MenuDown"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Down });
+	mBinds["MenuLeft"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Left });
+	mBinds["MenuRight"] = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Right });
+	mBinds["MenuEnter"] = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Return });
+	mBinds["MenuExit"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Escape });
+	
 
 	/*
 	mBinds["Up"]    = Bind(Bind::Type_JoyAxis, Bind::BindData::JA{ 0, sf::Joystick::Axis::Y, true });
@@ -114,6 +120,14 @@ void InputSystem::update(double dt)
 				{
 					it.second.mLastValue = it.second.mValue;
 					it.second.mValue = std::abs(val) / 100.f;
+
+					if (it.second.mValue < JOYSTICK_DEADZONE)
+						it.second.mValue = 0;
+				}
+				else if ((val > 0 && bindData.Negative) || (val < 0 && !bindData.Negative))
+				{
+					it.second.mLastValue = it.second.mValue;
+					it.second.mValue = 0;
 				}
 			} break;
 
@@ -146,7 +160,7 @@ std::vector<std::string> InputSystem::getValidBinds() const
 	std::vector<std::string> ret;
 	ret.reserve(mBinds.size());
 
-	std::for_each(mBinds.begin(), mBinds.end(), [&ret](const std::pair<std::string, Bind>& b) { ret.push_back(b.first); });
+	std::for_each(mBinds.begin(), mBinds.end(), [&ret](const std::pair<std::string, Bind>& b) { if (b.first.substr(0, 4) != "Menu") ret.push_back(b.first); });
 
 	return ret;
 }

@@ -25,7 +25,7 @@ void IntroState::update(double dt)
 	mTime += dt / 5;
 #endif
 
-	if (getInputs()["Exit"].pressed())
+	if (getInputs()["MenuExit"].pressed())
 		mTime = 1;
 
 	if (mTime > 1)
