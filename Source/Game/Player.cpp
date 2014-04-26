@@ -31,7 +31,9 @@ sf::Vector2f Player::getPosition() const
 
 void Player::update(double dt)
 {
-	sf::Vector2f moveSpeed(mInp["Right"].curValue() - mInp["Left"].curValue(), 0);
+	sf::Vector2f moveSpeed;
+	if (mInp["Dig"].curValue() < 0.5)
+		moveSpeed = sf::Vector2f(mInp["Right"].curValue() - mInp["Left"].curValue(), 0);
 
 	mSpeed.x = mSpeed.x + (moveSpeed.x - mSpeed.x) * dt * 7.5;
 
@@ -85,14 +87,16 @@ void Player::update(double dt)
 
 	if (!mOnGround)
 	{
-		mFallSpeed = std::min(mFallSpeed + dt * 15, 9.81);
+		mFallSpeed = std::min(mFallSpeed + dt * 15, 9.81 * 30);
 	}
 	else if (mFallSpeed > 0)
 		mFallSpeed = 0;
 
 	if (mInp["Dig"].curValue() > 0.5)
 	{
-		auto test = mQT->getAllActors(sf::FloatRect(mPosition.x - 35, mPosition.y - 35, 70, 70));
+		sf::Vector2f digDir(mInp["Right"].curValue() - mInp["Left"].curValue(), mInp["Down"].curValue() - mInp["Up"].curValue());
+
+		auto test = mQT->getAllActors(sf::FloatRect(mPosition.x - 15 + digDir.x * 18, mPosition.y - 15 + digDir.y * 18, 30, 30));
 
 		for (auto act : test)
 		{

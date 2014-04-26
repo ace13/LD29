@@ -23,7 +23,7 @@ void Settings::loadSettings()
 	if (!hasSetting("input", "sUse"))
 		setSetting("input", "sUse", "KB 4");
 	if (!hasSetting("input", "sJump"))
-		setSetting("input", "sJump", "KB 4");
+		setSetting("input", "sJump", "KB 57");
 	if (!hasSetting("input", "sDig"))
 		setSetting("input", "sDig", "KB 16");
 	if (!hasSetting("input", "sAccept"))
