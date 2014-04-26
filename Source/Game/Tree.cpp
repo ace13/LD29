@@ -19,7 +19,7 @@ Tree::Tree()
 		dist = std::uniform_int_distribution<int>(3, 4);
 		mCrownLength = dist(rd);
 	}
-	else // Fir
+	else // Pine
 	{
 		dist = std::uniform_int_distribution<int>(3, 6);
 		mStemLength = dist(rd);
