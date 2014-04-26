@@ -66,7 +66,7 @@ void QuadTree::draw(sf::RenderTarget& target) const
 
 SplittableQuadTreeLeaf::SplittableQuadTreeLeaf(sf::FloatRect bounds, uint8_t splitDepth, QuadTreeLeaf* parent) : QuadTreeLeaf(bounds, splitDepth, parent), mNW(nullptr), mNE(nullptr), mSW(nullptr), mSE(nullptr), mHasSplit(false)
 {
-	mActors.reserve(ACTOR_MAXCOUNT);
+	mActors.reserve(QT_ACTOR_MAXCOUNT);
 }
 SplittableQuadTreeLeaf::~SplittableQuadTreeLeaf()
 {
@@ -99,7 +99,7 @@ void SplittableQuadTreeLeaf::addActor(Actor* actor)
 		}
 		else
 		{
-			if (mActors.size() < ACTOR_MAXCOUNT)
+			if (mActors.size() < QT_ACTOR_MAXCOUNT)
 				mActors.push_back(actor);
 			else
 			{
@@ -217,7 +217,7 @@ void SplittableQuadTreeLeaf::update()
 
 		std::vector<Actor*> totalActors = getAllActors();
 
-		if (totalActors.size() > ACTOR_MAXCOUNT)
+		if (totalActors.size() > QT_ACTOR_MAXCOUNT)
 			return;
 
 		mActors = totalActors;
@@ -238,7 +238,7 @@ void SplittableQuadTreeLeaf::update()
 
 		totalActors = getAllActors();
 
-		if (totalActors.size() > ACTOR_MAXCOUNT)
+		if (totalActors.size() > QT_ACTOR_MAXCOUNT)
 			return;
 
 		mActors = totalActors;
