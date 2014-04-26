@@ -1,5 +1,6 @@
 #include "INI.hpp"
 
+#include <stdexcept>
 #include <fstream>
 
 INIFile::INIFile()
