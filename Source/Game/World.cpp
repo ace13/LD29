@@ -4,7 +4,7 @@
 #include "Player.hpp"
 #include <random>
 
-World::World() : mQuadTree(sf::FloatRect(-WORLD_WIDTH * 30 / 2, -WORLD_HEIGHT * 30 / 2, WORLD_WIDTH * 30, WORLD_HEIGHT * 30), 12)
+World::World() : mQuadTree(sf::FloatRect(-WORLD_WIDTH * 30 / 2, -WORLD_HEIGHT * 30 / 2, WORLD_WIDTH * 30, WORLD_HEIGHT * 30), 13)
 {
 	
 }
@@ -41,8 +41,7 @@ void World::generateWorld(InputSystem& sys)
 				g = new Ground(Ground::Grass);
 
 			g->setPosition(pos);
-			g->mQTLeaf = mQuadTree.addActor(g);
-			g->mQT = &mQuadTree;
+			mQuadTree.addActor(g);
 			g->genOre();
 		}
 
@@ -94,6 +93,8 @@ Player* World::getPlayer() const
 
 void World::update(double dt)
 {
+	mQuadTree.update(dt);
+
 	auto act = mQuadTree.getAllActors();
 	for (auto i : act)
 	{
@@ -121,5 +122,5 @@ void World::draw(sf::RenderTarget& target)
 
 	mPlayer->draw(target);
 
-	//mQuadTree.draw(target);
+	mQuadTree.draw(target);
 }

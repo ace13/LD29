@@ -1,6 +1,8 @@
 #include "Player.hpp"
 #include "../Util/Resources.hpp"
 #include "../InputSystem.hpp"
+#include "QuadTree.hpp"
+#include "Ground.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -30,6 +32,19 @@ void Player::update(double dt)
 	sf::Vector2f moveSpeed(mInp["Right"].curValue() - mInp["Left"].curValue(), mInp["Down"].curValue() - mInp["Up"].curValue());
 
 	mPosition += moveSpeed * (float)(dt * 120);
+
+	if (mInp["Enter"].curValue() > 0.5)
+	{
+		auto test = mQT->getAllActors(sf::FloatRect(mPosition.x - 35, mPosition.y - 35, 70, 70));
+
+		for (auto act : test)
+		{
+			if (typeid(*act) == typeid(Ground&))
+			{
+				((Ground*)act)->dig(dt);
+			}
+		}
+	}
 }
 
 void Player::draw(sf::RenderTarget& target)

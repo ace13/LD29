@@ -36,6 +36,10 @@ private:
 			sheet = SpriteSheet(5, 2);
 		else if (str == "ores.png")
 			sheet = SpriteSheet(5, 2);
+		else if (str == "building.png")
+			sheet = SpriteSheet(6, 2);
+		else if (str == "digging.png")
+			sheet = SpriteSheet(6, 1);
 
 		if (sheet.loadFromFile(str))
 			mResources[str] = sheet;

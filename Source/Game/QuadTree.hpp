@@ -7,8 +7,8 @@
 
 class Actor;
 
-const double QT_TICKRATE = 1.0 / 33.0;
-const int QT_ACTOR_MAXCOUNT = 10;
+const double QT_TICKRATE = 1.0 / 20.0;
+const int QT_ACTOR_MAXCOUNT = 20;
 
 class QuadTreeLeaf
 {
@@ -21,7 +21,7 @@ public:
 	virtual std::vector<Actor*> getAllActors() const = 0;
 	virtual std::vector<Actor*> getAllActors(sf::FloatRect bounds) const = 0;
 
-	virtual void update() = 0;
+	virtual bool update() = 0;
 
 	virtual void testSplit() = 0;
 
@@ -72,7 +72,7 @@ public:
 	virtual std::vector<Actor*> getAllActors() const;
 	virtual std::vector<Actor*> getAllActors(sf::FloatRect bounds) const;
 
-	virtual void update();
+	virtual bool update();
 	virtual void draw(sf::RenderTarget& target) const;
 
 	virtual void testSplit();
@@ -97,7 +97,7 @@ public:
 	virtual std::vector<Actor*> getAllActors() const;
 	virtual std::vector<Actor*> getAllActors(sf::FloatRect bounds) const;
 
-	virtual void update();
+	virtual bool update();
 	virtual void draw(sf::RenderTarget& target) const;
 	virtual void testSplit() {}
 

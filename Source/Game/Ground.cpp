@@ -9,9 +9,10 @@
 
 #include <random>
 
-Ground::Ground(Type t) : mType(t), mOre(nullptr)
+Ground::Ground(Type t) : mType(t), mOre(nullptr), mDug(0)
 {
 	mSheet = Resources::SpriteSheets["ground.png"];
+	mBreakSheet = Resources::SpriteSheets["digging.png"];
 
 	mFlip = std::uniform_int_distribution<int>(0, 1)(std::random_device());
 }
@@ -52,6 +53,21 @@ void Ground::genOre()
 	}
 }
 
+void Ground::dig(double dug)
+{
+	switch (mType)
+	{
+	case Rock: dug *= 0.5; break;
+	}
+
+	mDug = std::min(1.0, mDug + dug);
+}
+
+bool Ground::dug() const
+{
+	return mDug == 1.0;
+}
+
 void Ground::setType(Type t)
 {
 	mType = t;
@@ -69,7 +85,8 @@ sf::Vector2f Ground::getPosition() const
 
 void Ground::update(double dt)
 {
-
+	if (!dug())
+		mDug = std::max(0.0, mDug - dt / 10);
 }
 
 void Ground::draw(sf::RenderTarget& target)
@@ -82,7 +99,17 @@ void Ground::draw(sf::RenderTarget& target)
 	if (mFlip)
 		sprite.setScale(-1, 1);
 
+	if (dug())
+		sprite.setColor(sf::Color(75, 75, 75));
+
 	target.draw(sprite);
+
+	if (mDug > 0 && mDug < 1)
+	{
+		sprite.setTexture(mBreakSheet.getTexture());
+		sprite.setTextureRect(mBreakSheet.getRect(mDug * 6, 0));
+		target.draw(sprite);
+	}
 
 	if (mOre)
 		mOre->draw(target);

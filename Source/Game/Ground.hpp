@@ -18,6 +18,8 @@ public:
 	Ground(Type t);
 	~Ground();
 
+	void dig(double dt);
+	bool dug() const;
 	void genOre();
 	void setType(Type t);
 
@@ -31,6 +33,7 @@ private:
 	Ore* mOre;
 	Type mType;
 	bool mFlip;
+	double mDug;
 	sf::Vector2f mPosition;
-	SpriteSheet mSheet;
+	SpriteSheet mSheet, mBreakSheet;
 };

@@ -30,7 +30,9 @@ void QuadTree::update(double dt)
 
 QuadTreeLeaf* QuadTree::addActor(Actor* actor)
 {
-	return mMainLeaf->addActor(actor);
+	actor->mQT = this;
+	mMainLeaf->addActor(actor);
+	return actor->mQTLeaf;
 }
 
 void QuadTree::removeActor(Actor* actor)
@@ -102,6 +104,7 @@ QuadTreeLeaf* SplittableQuadTreeLeaf::addActor(Actor* actor)
 		{
 			if (mActors.size() < QT_ACTOR_MAXCOUNT)
 			{
+				actor->mQTLeaf = this;
 				mActors.push_back(actor);
 				return this;
 			}
@@ -142,8 +145,8 @@ std::vector<Actor*> SplittableQuadTreeLeaf::getAllActors() const
 	{
 		std::vector<Actor*> temp;
 		auto inserter = std::back_inserter(temp);
-		auto actors = mNW->getAllActors();
 
+		auto actors = mNW->getAllActors();
 		std::copy(actors.begin(), actors.end(), inserter);
 
 		actors = mNE->getAllActors();
@@ -154,6 +157,7 @@ std::vector<Actor*> SplittableQuadTreeLeaf::getAllActors() const
 
 		actors = mSE->getAllActors();
 		std::copy(actors.begin(), actors.end(), inserter);
+
 		return temp;
 	}
 	else
@@ -210,44 +214,47 @@ void SplittableQuadTreeLeaf::draw(sf::RenderTarget& target) const
 	}
 }
 
-void SplittableQuadTreeLeaf::update()
+bool SplittableQuadTreeLeaf::update()
 {
 	if (mHasSplit)
 	{
-		mNW->update();
-		mNE->update();
-		mSW->update();
-		mSE->update();
+		bool changed = false;
+		changed = changed || mNW->update();
+		changed = changed || mNE->update();
+		changed = changed || mSW->update();
+		changed = changed || mSE->update();
 
-		std::vector<Actor*> totalActors = getAllActors();
+		if (changed)
+		{
+			std::vector<Actor*> totalActors = getAllActors();
 
-		if (totalActors.size() > QT_ACTOR_MAXCOUNT)
-			return;
+			if (totalActors.size() > QT_ACTOR_MAXCOUNT)
+				return false;
 
-		mActors = totalActors;
+			unsplit();
 
-		unsplit();
+			for (auto it : totalActors)
+				addActor(it);
+		}
+
+		return changed;
 	}
 	else
 	{
+		bool changed = false;
+
 		std::vector<Actor*> totalActors = getAllActors();
 
-		std::for_each(totalActors.begin(), totalActors.end(), [this](Actor* act){ 
+		std::for_each(totalActors.begin(), totalActors.end(), [this, &changed](Actor* act){ 
 			if (!mBounds.contains(act->getPosition()))
 			{
 				removeActor(act);
 				mParent->addActor(act);
+				changed = true;
 			}
 		});
 
-		totalActors = getAllActors();
-
-		if (totalActors.size() > QT_ACTOR_MAXCOUNT)
-			return;
-
-		mActors = totalActors;
-
-		unsplit();
+		return changed;
 	}
 }
 
@@ -302,6 +309,8 @@ void SplittableQuadTreeLeaf::unsplit()
 	mNW = mNE = mSW = mSE = nullptr;
 
 	mHasSplit = false;
+
+	
 }
 
 
@@ -322,6 +331,7 @@ FinalQuadTreeLeaf::~FinalQuadTreeLeaf()
 
 QuadTreeLeaf* FinalQuadTreeLeaf::addActor(Actor* actor)
 {
+	actor->mQTLeaf = this;
 	mActors.push_back(actor);
 	return this;
 }
@@ -346,17 +356,21 @@ std::vector<Actor*> FinalQuadTreeLeaf::getAllActors(sf::FloatRect bounds) const
 	return ret;
 }
 
-void FinalQuadTreeLeaf::update()
+bool FinalQuadTreeLeaf::update()
 {
+	bool changed = false;
 	std::vector<Actor*> totalActors = mActors;
 
-	std::for_each(totalActors.begin(), totalActors.end(), [this](Actor* act){
+	std::for_each(totalActors.begin(), totalActors.end(), [this, &changed](Actor* act){
 		if (!mBounds.contains(act->getPosition()))
 		{
 			removeActor(act);
 			mParent->addActor(act);
+			changed = true;
 		}
 	});
+
+	return changed;
 }
 
 void FinalQuadTreeLeaf::draw(sf::RenderTarget& target) const

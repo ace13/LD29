@@ -38,5 +38,8 @@ void Ore::draw(sf::RenderTarget& target)
 	sprite.setOrigin(15, 15);
 	sprite.setPosition(mGround->getPosition());
 
+	if (mGround->dug())
+		sprite.setColor(sf::Color(75, 75, 75));
+
 	target.draw(sprite);
 }
