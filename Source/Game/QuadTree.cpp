@@ -28,9 +28,9 @@ void QuadTree::update(double dt)
 	}
 }
 
-void QuadTree::addActor(Actor* actor)
+QuadTreeLeaf* QuadTree::addActor(Actor* actor)
 {
-	mMainLeaf->addActor(actor);
+	return mMainLeaf->addActor(actor);
 }
 
 void QuadTree::removeActor(Actor* actor)
@@ -79,7 +79,7 @@ SplittableQuadTreeLeaf::~SplittableQuadTreeLeaf()
 	}
 }
 
-void SplittableQuadTreeLeaf::addActor(Actor* actor)
+QuadTreeLeaf* SplittableQuadTreeLeaf::addActor(Actor* actor)
 {
 	if (mBounds.contains(actor->getPosition()))
 	{
@@ -87,31 +87,34 @@ void SplittableQuadTreeLeaf::addActor(Actor* actor)
 		{
 			auto pos = actor->getPosition();
 			if (mNW->mBounds.contains(pos))
-				mNW->addActor(actor);
+				return mNW->addActor(actor);
 			else if (mNE->mBounds.contains(pos))
-				mNE->addActor(actor);
+				return mNE->addActor(actor);
 			else if (mSW->mBounds.contains(pos))
-				mSW->addActor(actor);
+				return mSW->addActor(actor);
 			else if (mSE->mBounds.contains(pos))
-				mSE->addActor(actor);
+				return mSE->addActor(actor);
 			else
 				throw std::runtime_error("Couldn't find a valid spot for an Actor, something's gone horribly wrong.");
 		}
 		else
 		{
 			if (mActors.size() < QT_ACTOR_MAXCOUNT)
+			{
 				mActors.push_back(actor);
+				return this;
+			}
 			else
 			{
 				split();
 
-				addActor(actor);
+				return addActor(actor);
 			}
 			
 		}
 	}
 	else
-		mParent->addActor(actor);
+		return mParent->addActor(actor);
 }
 
 void SplittableQuadTreeLeaf::removeActor(Actor* actor)
@@ -316,9 +319,10 @@ FinalQuadTreeLeaf::~FinalQuadTreeLeaf()
 
 }
 
-void FinalQuadTreeLeaf::addActor(Actor* actor)
+QuadTreeLeaf* FinalQuadTreeLeaf::addActor(Actor* actor)
 {
 	mActors.push_back(actor);
+	return this;
 }
 void FinalQuadTreeLeaf::removeActor(Actor* actor)
 {

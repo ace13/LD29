@@ -1,0 +1,21 @@
+#pragma once
+
+#include "Actor.hpp"
+#include "../Util/SpriteSheet.hpp"
+
+class Player : public Actor
+{
+public:
+	Player();
+	~Player();
+
+	void setPosition(const sf::Vector2f& pos);
+	sf::Vector2f getPosition() const;
+
+	void update(double dt);
+	void draw(sf::RenderTarget& target);
+
+private:
+	SpriteSheet mSheet;
+	sf::Vector2f mPosition, mSpeed;
+};

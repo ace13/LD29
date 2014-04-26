@@ -1,12 +1,14 @@
 #include "Ground.hpp"
+#include "Ore.hpp";
 #include "../Util/Resources.hpp"
+#include "QuadTree.hpp"
 
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
 #include <random>
 
-Ground::Ground() : mType(Grass)
+Ground::Ground(Type t) : mType(t), mOre(nullptr)
 {
 	mSheet = Resources::SpriteSheets["ground.png"];
 
@@ -15,7 +17,38 @@ Ground::Ground() : mType(Grass)
 
 Ground::~Ground()
 {
+	if (mOre)
+		delete mOre;
+}
 
+void Ground::genOre()
+{
+	if (mType == Grass)
+	{
+
+	}
+	else
+	{
+		auto ore = std::uniform_int_distribution<int>(0, 25)(std::random_device()) == 0;
+
+		if (ore)
+		{
+			Ore::Type oreType = Ore::Max;
+			for (int i = Ore::Max-1; i >= 0; --i)
+			{
+				if (std::uniform_int_distribution<int>(0, 100)(std::random_device()) < Ore::OreWeight((Ore::Type)i))
+				{
+					oreType = (Ore::Type)i;
+					break;
+				}
+			}
+
+			if (oreType == Ore::Max)
+				return;
+
+			mOre = new Ore(this, (Ore::Type)oreType);
+		}
+	}
 }
 
 void Ground::setType(Type t)
@@ -33,6 +66,11 @@ sf::Vector2f Ground::getPosition() const
 	return mPosition;
 }
 
+void Ground::update(double dt)
+{
+
+}
+
 void Ground::draw(sf::RenderTarget& target)
 {
 	sf::Sprite sprite(mSheet.getTexture());
@@ -44,4 +82,7 @@ void Ground::draw(sf::RenderTarget& target)
 		sprite.setScale(-1, 1);
 
 	target.draw(sprite);
+
+	if (mOre)
+		mOre->draw(target);
 }

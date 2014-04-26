@@ -16,7 +16,7 @@ public:
 	QuadTreeLeaf(sf::FloatRect bounds, uint8_t splitDepth, QuadTreeLeaf* parent = nullptr) : mBounds(bounds), mLevel(splitDepth), mParent(parent) { }
 	virtual ~QuadTreeLeaf() { }
 
-	virtual void addActor(Actor* actor) = 0;
+	virtual QuadTreeLeaf* addActor(Actor* actor) = 0;
 	virtual void removeActor(Actor* actor) = 0;
 	virtual std::vector<Actor*> getAllActors() const = 0;
 	virtual std::vector<Actor*> getAllActors(sf::FloatRect bounds) const = 0;
@@ -44,7 +44,7 @@ public:
 
 	void update(double dt);
 
-	void addActor(Actor* actor);
+	QuadTreeLeaf* addActor(Actor* actor);
 	void removeActor(Actor* actor);
 	std::vector<Actor*> getAllActors() const;
 	std::vector<Actor*> getAllActors(sf::FloatRect bounds) const;
@@ -67,7 +67,7 @@ public:
 	SplittableQuadTreeLeaf(sf::FloatRect bounds, uint8_t splitDepth, QuadTreeLeaf* parent = nullptr);
 	~SplittableQuadTreeLeaf();
 
-	virtual void addActor(Actor* actor);
+	virtual QuadTreeLeaf* addActor(Actor* actor);
 	virtual void removeActor(Actor* actor);
 	virtual std::vector<Actor*> getAllActors() const;
 	virtual std::vector<Actor*> getAllActors(sf::FloatRect bounds) const;
@@ -92,7 +92,7 @@ public:
 	FinalQuadTreeLeaf(sf::FloatRect bounds, uint8_t splitDepth, QuadTreeLeaf* parent = nullptr);
 	~FinalQuadTreeLeaf();
 
-	virtual void addActor(Actor* actor);
+	virtual QuadTreeLeaf* addActor(Actor* actor);
 	virtual void removeActor(Actor* actor);
 	virtual std::vector<Actor*> getAllActors() const;
 	virtual std::vector<Actor*> getAllActors(sf::FloatRect bounds) const;
