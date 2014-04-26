@@ -15,7 +15,7 @@ Tree::Tree()
 	if (spruce)
 	{
 		mStemLength = 1;
-		dist = std::uniform_int_distribution<int>(2, 4);
+		dist = std::uniform_int_distribution<int>(3, 4);
 		mCrownLength = dist(rd);
 	}
 	else // Fir
