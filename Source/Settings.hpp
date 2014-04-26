@@ -17,7 +17,7 @@ public:
 	template<typename T>
 	static T getSetting(const std::string& section, const std::string& key)
 	{
-		return privGetSetting<T>(section, key, std::is_same<T, std::string>::type());
+		return privGetSetting<T>(section, key, std::is_same<T, std::string>());
 	}
 	template<typename T>
 	static void setSetting(const std::string& section, const std::string& key, T value)
