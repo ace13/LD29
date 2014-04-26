@@ -17,7 +17,7 @@ World::~World()
 void World::generateWorld(InputSystem& sys)
 {
 	auto p = new Player(sys);
-	p->setPosition(sf::Vector2f(0, -WORLD_HALFHEIGHT_PIXELS + GROUND_LEVEL * 30 - 15));
+	p->setPosition(sf::Vector2f(0, -WORLD_HALFHEIGHT_PIXELS + GROUND_LEVEL * 30 - 20));
 	mPlayer = p;
 
 	mQuadTree.addActor(p);

@@ -5,6 +5,7 @@
 #include "Ground.hpp"
 #include "World.hpp"
 
+#include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
@@ -32,8 +33,6 @@ void Player::update(double dt)
 {
 	sf::Vector2f moveSpeed(mInp["Right"].curValue() - mInp["Left"].curValue(), 0); // mInp["Down"].curValue() - mInp["Up"].curValue());
 
-	mPosition += moveSpeed * (float)(dt * 120);
-	
 	if (mInp["Up"].curValue() > 0.5 && mOnGround)
 	{
 		mFallSpeed = -5;
@@ -42,32 +41,51 @@ void Player::update(double dt)
 
 	mPosition.y += mFallSpeed * 30 * dt;
 	
-	if (mPosition.x < -WORLD_HALFWIDTH_PIXELS + 15)
-		mPosition.x = -WORLD_HALFWIDTH_PIXELS + 15;
-	else if (mPosition.x > WORLD_HALFWIDTH_PIXELS - 15)
-		mPosition.x = WORLD_HALFWIDTH_PIXELS - 15;
-	if (mPosition.y < -WORLD_HALFHEIGHT_PIXELS + 15)
-		mPosition.y = -WORLD_HALFHEIGHT_PIXELS + 15;
-	else if (mPosition.y > WORLD_HALFHEIGHT_PIXELS - 15)
-		mPosition.y = WORLD_HALFHEIGHT_PIXELS - 15;
+	auto test = mQT->getAllActors(sf::FloatRect(mPosition.x - 30, mPosition.y - 30, 60, 60));
 
-	auto test = mQT->getAllActors(sf::FloatRect(mPosition.x - 35, mPosition.y - 35, 70, 70));
+	if (mFallSpeed >= 0)
+		mOnGround = false;
 
-	mOnGround = false;
+	sf::FloatRect rect(mPosition.x - 15, mPosition.y - 15, 30, 30);
+	
 	for (auto act : test)
 	{
 		if (typeid(*act) == typeid(Ground&))
 		{
-			if ((act->getPosition().y > mPosition.y) && (act->getPosition().y - mPosition.y) < 30 && !((Ground*)act)->dug())
-				mOnGround = true;
+			bool solid = !((Ground*)act)->dug();
+
+			auto pos = act->getPosition();
+			sf::FloatRect actRect(pos.x - 16, pos.y - 16, 32, 32);
+			sf::FloatRect intersect;
+
+			if (actRect.intersects(rect, intersect) && solid)
+			{
+				if (std::abs(pos.y - mPosition.y) < 27)
+				{
+					if (pos.x < mPosition.x && moveSpeed.x < 0)
+						moveSpeed.x = 0;
+					else if (pos.x > mPosition.x && moveSpeed.x > 0)
+						moveSpeed.x = 0;
+				}
+				else if (pos.y > mPosition.y)
+				{
+					if (std::abs(pos.x - mPosition.x) < 27 && mFallSpeed >= 0)
+						mOnGround = true;
+
+				}
+				else if (pos.y < mPosition.y && std::abs(pos.x - mPosition.x) < 27 && mFallSpeed < 0)
+					mFallSpeed = 0;
+			}
 		}
 	}
+
+	mPosition += moveSpeed * (float)(dt * 120);
 
 	if (!mOnGround)
 	{
 		mFallSpeed = std::min(mFallSpeed + dt * 9.81, 9.81);
 	}
-	else
+	else if (mFallSpeed > 0)
 		mFallSpeed = 0;
 
 	if (mInp["Enter"].curValue() > 0.5)
@@ -82,6 +100,16 @@ void Player::update(double dt)
 			}
 		}
 	}
+
+	// Sanitize position
+	if (mPosition.x < -WORLD_HALFWIDTH_PIXELS + 15)
+		mPosition.x = -WORLD_HALFWIDTH_PIXELS + 15;
+	else if (mPosition.x > WORLD_HALFWIDTH_PIXELS - 15)
+		mPosition.x = WORLD_HALFWIDTH_PIXELS - 15;
+	if (mPosition.y < -WORLD_HALFHEIGHT_PIXELS + 15)
+		mPosition.y = -WORLD_HALFHEIGHT_PIXELS + 15;
+	else if (mPosition.y > WORLD_HALFHEIGHT_PIXELS - 15)
+		mPosition.y = WORLD_HALFHEIGHT_PIXELS - 15;
 }
 
 void Player::draw(sf::RenderTarget& target)
