@@ -2,6 +2,7 @@
 #include "../Game/Actor.hpp"
 
 #include <SFML/Graphics/RectangleShape.hpp>
+#include <stdexcept>
 #include <algorithm>
 #include <iterator>
 
