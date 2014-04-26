@@ -1,6 +1,7 @@
 #include "IntroState.hpp"
 #include "MenuState.hpp"
 #include "Util/FontFinder.hpp"
+#include "InputSystem.hpp"
 
 #include <SFML/Window/Mouse.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
@@ -23,6 +24,9 @@ void IntroState::update(double dt)
 #else
 	mTime += dt / 5;
 #endif
+
+	if (getInputs()["Exit"].pressed())
+		mTime = 1;
 
 	if (mTime > 1)
 	{
