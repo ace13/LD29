@@ -22,10 +22,12 @@ set(Base_HEADERS
 
 set(Game_SOURCES
 	Game/Actor.cpp
+	Game/QuadTree.cpp
 )
 
 set(Game_HEADERS
 	Game/Actor.hpp
+	Game/QuadTree.hpp
 )
 
 set(Menu_SOURCES
@@ -47,7 +49,6 @@ set(Menu_HEADERS
 set(Util_SOURCES
 	Util/Animation.cpp
 	Util/INI.cpp
-	Util/QuadTree.cpp
 	Util/ShapeDraw.cpp
 	Util/SpriteSheet.cpp
 )
@@ -69,7 +70,6 @@ set(Util_HEADERS
 	Util/Animation.hpp
 	Util/FontFinder.hpp
 	Util/INI.hpp
-	Util/QuadTree.hpp
 	Util/ShapeDraw.hpp
 	Util/SpriteSheet.hpp
 )
