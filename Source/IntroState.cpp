@@ -50,11 +50,11 @@ void IntroState::update(double dt)
 {
 	if (temp)
 		temp->update();
-	//mTime += dt;
+	mTime += dt;
 
 	tree.update(dt);
 
-	if (mTime > 10)
+	if (mTime > 1)
 	{
 		auto stateKeeper = getStateMachine().curState();
 		getStateMachine().popState();

@@ -36,6 +36,7 @@ public:
 		};
 		
 		Bind();
+		Bind(Type type, BindData data);
 		Bind(const Bind& rhs);
 		Bind(Bind&& rhs);
 		~Bind();
@@ -51,8 +52,6 @@ public:
 		inline BindData getData() const { return mBindData; }
 
 	private:
-		Bind(Type type, BindData data);
-
 		Type mBindType;
 		BindData mBindData;
 		float mValue, mLastValue;

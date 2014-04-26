@@ -48,7 +48,7 @@ set(Menu_HEADERS
 
 set(Util_SOURCES
 	Util/Animation.cpp
-	Util/JSON.cpp
+	Util/INI.cpp
 	Util/QuadTree.cpp
 	Util/ShapeDraw.cpp
 	Util/SpriteSheet.cpp
@@ -57,7 +57,7 @@ set(Util_SOURCES
 if (WIN32)
 	set(Util_SOURCES ${Util_SOURCES} Util/FontFinder_Windows.cpp)
 else()
-	find_path(Fontconfig_INCLUDE_DIR fontconfig.h)
+	find_path(Fontconfig_INCLUDE_DIR fontconfig/fontconfig.h)
 	find_library(Fontconfig_LIBRARY NAMES fontconfig)
 
 	include_directories(
@@ -70,7 +70,7 @@ endif()
 set(Util_HEADERS
 	Util/Animation.hpp
 	Util/FontFinder.hpp
-	Util/JSON.hpp
+	Util/INI.hpp
 	Util/QuadTree.hpp
 	Util/ShapeDraw.hpp
 	Util/SpriteSheet.hpp

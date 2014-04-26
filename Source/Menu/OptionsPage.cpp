@@ -4,6 +4,8 @@
 #include "../MenuState.hpp"
 #include "../Util/ShapeDraw.hpp"
 
+#include "../Settings.hpp"
+
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -11,6 +13,9 @@
 OptionsMenuPage::OptionsMenuPage(MenuState* state) : MenuPage(state), mSoundVol(50), mMusicVol(50)
 {
 	mEntries = { { "Sound: %d%%", [](){} }, { "Music: %d%%", [](){} }, { "Keybinds", [state](){ state->pushPage(new KeybindingPage(state)); } }, { "Back", [state](){ state->popPage(); } } };
+
+	mSoundVol = Settings::getSetting<int>("volume", "iSound");
+	mMusicVol = Settings::getSetting<int>("volume", "iMusic");
 
 	mSoundBar.setMaxValue(100);
 	mSoundBar.setRadius(10);
@@ -33,6 +38,8 @@ OptionsMenuPage::OptionsMenuPage(MenuState* state) : MenuPage(state), mSoundVol(
 
 OptionsMenuPage::~OptionsMenuPage()
 {
+	Settings::setSetting<int>("volume", "iSound", mSoundVol);
+	Settings::setSetting<int>("volume", "iMusic", mMusicVol);
 }
 
 void OptionsMenuPage::handleEvent(const sf::Event& ev)

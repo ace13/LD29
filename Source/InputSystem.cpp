@@ -1,23 +1,84 @@
 #include "InputSystem.hpp"
+#include "Settings.hpp"
 
 #include <SFML/Window/Event.hpp>
+#include <sstream>
+#include <cstdint>
 
 namespace
 {
 	const double TICKRATE = 1.f / 10.f;
+
+	InputSystem::Bind parseBind(const std::string& bindString)
+	{
+		std::istringstream iss(bindString);
+		char tmp[2];
+		iss.readsome(tmp, 2);
+		std::string type(tmp, 2);
+
+		if (type == "KB")
+		{
+			uint32_t key;
+			iss >> key;
+
+			return InputSystem::Bind(InputSystem::Bind::Type_Keyboard, InputSystem::Bind::BindData::KB{ key });
+		}
+		else if (type == "JB")
+		{
+			uint32_t joyId, button;
+			iss >> joyId >> button;
+
+			return InputSystem::Bind(InputSystem::Bind::Type_JoyButton, InputSystem::Bind::BindData::JB{ joyId, button });
+		}
+		else if (type == "JA")
+		{
+			uint32_t joyId, axis;
+			bool negative;
+			iss >> joyId >> axis >> negative;
+
+			return InputSystem::Bind(InputSystem::Bind::Type_JoyAxis, InputSystem::Bind::BindData::JA{ joyId, axis, negative });
+		}
+
+		throw std::runtime_error("Failed to parse bind");
+	}
+
+	std::string serializeBind(const InputSystem::Bind& bind)
+	{
+		std::ostringstream oss;
+
+		switch (bind.getType())
+		{
+		case InputSystem::Bind::Type_Keyboard:
+			oss << "KB " << bind.getData().Keyboard.Key; break;
+		case InputSystem::Bind::Type_JoyAxis:
+			oss << "JA " << bind.getData().JoyAxis.JoystickId << " " << bind.getData().JoyAxis.Axis << " " << bind.getData().JoyAxis.Negative; break;
+		case InputSystem::Bind::Type_JoyButton:
+			oss << "JB " << bind.getData().JoyButton.JoystickId << " " << bind.getData().JoyButton.Button; break;
+		}
+
+		return oss.str();
+	}
 }
 
 InputSystem::InputSystem() : mCurTick(0)
 {
 	///\TODO Move binds somewhere else, probably
 	
+	mBinds["Up"]    = parseBind(Settings::getSetting<std::string>("input", "sUp"));
+	mBinds["Down"]  = parseBind(Settings::getSetting<std::string>("input", "sDown"));
+	mBinds["Left"]  = parseBind(Settings::getSetting<std::string>("input", "sLeft"));
+	mBinds["Right"] = parseBind(Settings::getSetting<std::string>("input", "sRight"));
+	mBinds["Enter"] = parseBind(Settings::getSetting<std::string>("input", "sEnter"));
+
+	/*
 	mBinds["Up"]    = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Up });
 	mBinds["Down"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Down });
 	mBinds["Left"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Left });
 	mBinds["Right"] = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Right });
 	mBinds["Enter"] = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Return });
 	mBinds["Exit"]  = Bind(Bind::Type_Keyboard, Bind::BindData::KB{ sf::Keyboard::Escape });
-	
+	*/
+
 	/*
 	mBinds["Up"]    = Bind(Bind::Type_JoyAxis, Bind::BindData::JA{ 0, sf::Joystick::Axis::Y, true });
 	mBinds["Down"]  = Bind(Bind::Type_JoyAxis, Bind::BindData::JA{ 0, sf::Joystick::Axis::Y, false });
@@ -96,6 +157,7 @@ InputSystem::Bind InputSystem::operator[](const std::string& bind) const
 void InputSystem::rebind(const std::string& bind, Bind::Type type, const Bind::BindData& data)
 {
 	mBinds[bind] = Bind(type, data);
+	Settings::setSetting("input", "s" + bind, serializeBind(mBinds[bind]));
 	update(1.0f);
 }
 
