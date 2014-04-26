@@ -20,7 +20,7 @@ void IntroState::update(double dt)
 {
 	mTime += dt;
 
-	if (mTime > 1)
+	if (mTime > 5)
 	{
 		auto stateKeeper = getStateMachine().curState();
 		getStateMachine().popState();
@@ -40,8 +40,8 @@ void IntroState::draw(sf::RenderTarget& target)
 
 	target.draw(introText);
 
-	introText.setString("<Copyright placeholder>");
-	introText.setCharacterSize(18U);
+	introText.setString("Made by Alexander \"Ace\" Olofsson for Ludum Dare #29");
+	introText.setCharacterSize(11U);
 
 	{
 		auto rect = introText.getLocalBounds();

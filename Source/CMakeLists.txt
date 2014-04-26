@@ -4,7 +4,6 @@ set(Base_SOURCES
 	GameState.cpp
 	InputSystem.cpp
 	IntroState.cpp
-	LoadingState.cpp
 	MenuState.cpp
 	Settings.cpp
 	StateMachine.cpp
@@ -16,7 +15,6 @@ set(Base_HEADERS
 	GameState.hpp
 	InputSystem.hpp
 	IntroState.hpp
-	LoadingState.hpp
 	MenuState.hpp
 	Settings.hpp
 	StateMachine.hpp
