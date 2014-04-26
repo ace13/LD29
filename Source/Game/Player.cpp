@@ -96,7 +96,7 @@ void Player::update(double dt)
 	{
 		sf::Vector2f digDir(mInp["Right"].curValue() - mInp["Left"].curValue(), mInp["Down"].curValue() - mInp["Up"].curValue());
 
-		auto test = mQT->getAllActors(sf::FloatRect(mPosition.x - 15 + digDir.x * 18, mPosition.y - 15 + digDir.y * 18, 30, 30));
+		auto test = mQT->getAllActors(sf::FloatRect(mPosition.x - 15 + digDir.x * 25, mPosition.y - 15 + digDir.y * 25, 30, 30));
 
 		for (auto act : test)
 		{
