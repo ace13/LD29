@@ -3,6 +3,7 @@
 #include "../InputSystem.hpp"
 #include "QuadTree.hpp"
 #include "Ground.hpp"
+#include "Tree.hpp"
 #include "World.hpp"
 
 #include <SFML/Graphics/Rect.hpp>
@@ -103,6 +104,10 @@ void Player::update(double dt)
 			if (typeid(*act) == typeid(Ground&))
 			{
 				((Ground*)act)->dig(dt);
+			}
+			else if (typeid(*act) == typeid(Tree&))
+			{
+				((Tree*)act)->chop();
 			}
 		}
 	}

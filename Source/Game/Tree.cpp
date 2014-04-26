@@ -1,4 +1,5 @@
 #include "Tree.hpp"
+#include "QuadTree.hpp"
 #include "../Util/Resources.hpp"
 #include <SFML/Graphics/Sprite.hpp>
 #include <random>
@@ -30,6 +31,12 @@ Tree::Tree()
 Tree::~Tree()
 {
 
+}
+
+void Tree::chop()
+{
+	mQTLeaf->removeActor(this);
+	delete this;
 }
 
 void Tree::update(double dt)
