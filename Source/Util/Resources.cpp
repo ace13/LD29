@@ -1,3 +1,3 @@
 #include "Resources.hpp"
 
-//ResourceManager<SpriteSheet> Resources::SpriteSheets;
+ResourceManager<SpriteSheet> Resources::SpriteSheets;

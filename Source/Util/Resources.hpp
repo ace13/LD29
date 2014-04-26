@@ -13,7 +13,7 @@ public:
 
 	T operator[](const std::string& str)
 	{
-		if (mResources.count(str) == 0)
+		if (mResources.empty() || mResources.count(str) == 0)
 			loadResource(str);
 
 		return mResources.at(str);
@@ -40,5 +40,5 @@ private:
 
 namespace Resources
 {
-	static ResourceManager<SpriteSheet> SpriteSheets;
+	extern ResourceManager<SpriteSheet> SpriteSheets;
 }
