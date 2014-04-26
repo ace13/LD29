@@ -37,7 +37,7 @@ void Player::update(double dt)
 
 	if (mInp["Up"].curValue() > 0.5 && mOnGround)
 	{
-		mFallSpeed = -5.25;
+		mFallSpeed = -6;
 		mOnGround = false;
 	}
 
@@ -85,7 +85,7 @@ void Player::update(double dt)
 
 	if (!mOnGround)
 	{
-		mFallSpeed = std::min(mFallSpeed + dt * 9.81, 9.81);
+		mFallSpeed = std::min(mFallSpeed + dt * 15, 9.81);
 	}
 	else if (mFallSpeed > 0)
 		mFallSpeed = 0;

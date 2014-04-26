@@ -20,6 +20,8 @@ void Settings::loadSettings()
 		setSetting("input", "sLeft", "KB 71");
 	if (!hasSetting("input", "sRight"))
 		setSetting("input", "sRight", "KB 72");
+	if (!hasSetting("input", "sJump"))
+		setSetting("input", "sJump", "KB 57");
 	if (!hasSetting("input", "sEnter"))
 		setSetting("input", "sEnter", "KB 58");
 	if (!hasSetting("input", "sExit"))

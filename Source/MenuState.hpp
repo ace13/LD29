@@ -8,7 +8,7 @@
 class MenuState : public State
 {
 public:
-	MenuState();
+	MenuState(bool ingame = false);
 	~MenuState();
 
 	void update(double dt);

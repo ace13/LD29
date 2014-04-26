@@ -38,9 +38,9 @@ public:
 	void popState();
 	std::shared_ptr<State> curState() const;
 
-	void update(double dt) const;
-	void handleEvent(const sf::Event& ev) const;
-	void draw(sf::RenderTarget& target) const;
+	void update(double dt);
+	void handleEvent(const sf::Event& ev);
+	void draw(sf::RenderTarget& target);
 
 private:
 	bool mDirty;

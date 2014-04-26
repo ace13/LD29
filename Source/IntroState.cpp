@@ -18,9 +18,13 @@ IntroState::~IntroState()
 
 void IntroState::update(double dt)
 {
-	mTime += dt;
+#if _DEBUG
+	mTime += dt * 5;
+#else
+	mTime += dt / 5;
+#endif
 
-	if (mTime > 5)
+	if (mTime > 1)
 	{
 		auto stateKeeper = getStateMachine().curState();
 		getStateMachine().popState();

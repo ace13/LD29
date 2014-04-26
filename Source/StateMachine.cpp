@@ -33,33 +33,32 @@ std::shared_ptr<State> StateMachine::curState() const
 }
 
 
-void StateMachine::update(double dt) const
+void StateMachine::update(double dt)
 {
-	for (auto it = mStateStack.rbegin(); it != mStateStack.rend(); ++it)
-	{
-		(*it)->update(dt);
-		if (mDirty)
-			return;
-	}
+	if (mStateStack.empty())
+		return;
+
+	mStateStack.back()->update(dt);
 }
 
-void StateMachine::handleEvent(const sf::Event& ev) const
+void StateMachine::handleEvent(const sf::Event& ev)
 {
-	for (auto it = mStateStack.rbegin(); it != mStateStack.rend(); ++it)
-	{
-		(*it)->handleEvent(ev);
-		if (mDirty)
-			return;
-	}
+	if (mStateStack.empty())
+		return;
+
+	mStateStack.back()->handleEvent(ev);
 }
 
-void StateMachine::draw(sf::RenderTarget& target) const
+void StateMachine::draw(sf::RenderTarget& target)
 {
-	for (auto it = mStateStack.rbegin(); it != mStateStack.rend(); ++it)
+	for (auto it = mStateStack.begin(); it != mStateStack.end(); ++it)
 	{
 		(*it)->draw(target);
 		if (mDirty)
+		{
+			mDirty = false;
 			return;
+		}
 	}
 }
 

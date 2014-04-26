@@ -68,6 +68,7 @@ InputSystem::InputSystem() : mCurTick(0)
 	mBinds["Down"]  = parseBind(Settings::getSetting<std::string>("input", "sDown"));
 	mBinds["Left"]  = parseBind(Settings::getSetting<std::string>("input", "sLeft"));
 	mBinds["Right"] = parseBind(Settings::getSetting<std::string>("input", "sRight"));
+	mBinds["Jump"]  = parseBind(Settings::getSetting<std::string>("input", "sJump"));
 	mBinds["Enter"] = parseBind(Settings::getSetting<std::string>("input", "sEnter"));
 	mBinds["Exit"]  = parseBind(Settings::getSetting<std::string>("input", "sExit"));
 

@@ -1,17 +1,21 @@
 #include "MenuState.hpp"
 #include "Util/FontFinder.hpp"
 #include <SFML/Graphics/Text.hpp>
-#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/Window/Event.hpp>
 
 #include "Menu/MainMenu.hpp"
+#include "Menu/InGameMenu.hpp"
 
 sf::Font def = FontFinder::findDefaultFont();
 
-MenuState::MenuState() : mDirty(false), mLerp(0)
+MenuState::MenuState(bool ingame) : mDirty(false), mLerp(0)
 {
-	pushPage(new MainMenuPage(this));
+	if (ingame)
+		pushPage(new InGameMenuPage(this));
+	else
+		pushPage(new MainMenuPage(this));
 
 	mLerp = 1;
 }
@@ -84,6 +88,10 @@ void MenuState::draw(sf::RenderTarget& target)
 		((sf::RenderWindow&)target).close();
 		return;
 	}
+
+	sf::RectangleShape rect(target.getView().getSize());
+	rect.setFillColor(sf::Color(0, 0, 0, 200));
+	target.draw(rect);
 
 	sf::Text title("<Title Goes Here>", def, 64U);
 
