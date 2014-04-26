@@ -4,7 +4,7 @@
 #include "Player.hpp"
 #include <random>
 
-World::World() : mQuadTree(sf::FloatRect(-WORLD_WIDTH * 30 / 2, -WORLD_HEIGHT * 30 / 2, WORLD_WIDTH * 30, WORLD_HEIGHT * 30), 13)
+World::World() : mQuadTree(sf::FloatRect(-WORLD_HALFWIDTH_PIXELS, -WORLD_HALFHEIGHT_PIXELS, WORLD_WIDTH_PIXELS, WORLD_HEIGHT_PIXELS), 13)
 {
 	
 }
@@ -17,7 +17,7 @@ World::~World()
 void World::generateWorld(InputSystem& sys)
 {
 	auto p = new Player(sys);
-	p->setPosition(sf::Vector2f(0, -15 * WORLD_HEIGHT + GROUND_LEVEL * 30 - 15));
+	p->setPosition(sf::Vector2f(0, -WORLD_HALFHEIGHT_PIXELS + GROUND_LEVEL * 30 - 15));
 	mPlayer = p;
 
 	mQuadTree.addActor(p);
@@ -29,7 +29,7 @@ void World::generateWorld(InputSystem& sys)
 	{
 		for (int y = GROUND_LEVEL; y < WORLD_HEIGHT; ++y)
 		{
-			sf::Vector2f pos(-WORLD_WIDTH * 15 + 15 + x * 30, -WORLD_HEIGHT * 15 + 15 + y * 30);
+			sf::Vector2f pos(-WORLD_HALFWIDTH_PIXELS + 15 + x * 30, -WORLD_HALFHEIGHT_PIXELS + 15 + y * 30);
 
 			Ground* g;
 
@@ -48,7 +48,7 @@ void World::generateWorld(InputSystem& sys)
 		if (tree(rd) < 15)
 		{
 			Tree* t = new Tree();
-			t->setPosition(sf::Vector2f(-WORLD_WIDTH * 15 + 15 + x * 30, -15 * WORLD_HEIGHT + GROUND_LEVEL * 30 - 14));
+			t->setPosition(sf::Vector2f(-WORLD_HALFWIDTH_PIXELS + 15 + x * 30, -WORLD_HALFHEIGHT_PIXELS + GROUND_LEVEL * 30 - 14));
 			mQuadTree.addActor(t);
 		}
 

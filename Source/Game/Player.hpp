@@ -19,5 +19,7 @@ public:
 private:
 	SpriteSheet mSheet;
 	InputSystem& mInp;
-	sf::Vector2f mPosition, mSpeed;
+	sf::Vector2f mPosition;
+	float mFallSpeed;
+	bool mOnGround;
 };
