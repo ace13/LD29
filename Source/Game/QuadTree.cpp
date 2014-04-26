@@ -259,6 +259,9 @@ void SplittableQuadTreeLeaf::testSplit()
 
 void SplittableQuadTreeLeaf::split()
 {
+	auto temp = mActors;
+	mActors.clear();
+
 	mHasSplit = true;
 
 	auto nwBound = sf::FloatRect(mBounds.left, mBounds.top, mBounds.width / 2.f, mBounds.height / 2.f);
@@ -280,6 +283,9 @@ void SplittableQuadTreeLeaf::split()
 		mSW = new SplittableQuadTreeLeaf(swBound, mLevel - 1, this);
 		mSE = new SplittableQuadTreeLeaf(seBound, mLevel - 1, this);
 	}
+
+	for (auto act : temp)
+		addActor(act);
 }
 
 void SplittableQuadTreeLeaf::unsplit()

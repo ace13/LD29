@@ -4,6 +4,7 @@
 
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
 #include <sstream>
 #include <chrono>
 #include <thread>
@@ -76,15 +77,22 @@ int Application::run()
 			
 			mState.draw(mWindow);
 
-			std::ostringstream ss;
-			ss << mStats.getSmoothFPS() << " FPS\n" << mStats.getSmoothFrameTime() << "ms";
-			frameInfo.setString(ss.str());
+			{
+				std::ostringstream ss;
+				ss << mStats.getSmoothFPS() << " FPS\n" << mStats.getSmoothFrameTime() << "ms";
+				frameInfo.setString(ss.str());
 
-			mWindow.draw(frameInfo);
+				auto rect = frameInfo.getLocalBounds();
+				sf::RectangleShape background(sf::Vector2f(rect.width, rect.height + 8));
+				background.setFillColor(sf::Color(0, 0, 0, 128));
+				mWindow.draw(background);
+
+				mWindow.draw(frameInfo);
+			}
 
 			mWindow.display();
 
-			std::this_thread::sleep_for(std::chrono::milliseconds(1));
+			std::this_thread::sleep_for(std::chrono::microseconds(500));
 		}
 
 		return 0;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "StateMachine.hpp"
+#include "Game/World.hpp"
 #include <SFML/Graphics/View.hpp>
 
 class GameState : public State
@@ -15,4 +16,5 @@ public:
 
 private:
 	sf::View mGameView;
+	World mWorld;
 };

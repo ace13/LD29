@@ -30,6 +30,8 @@ private:
 		SpriteSheet sheet(0, 0);
 		if (str == "tree.png")
 			sheet = SpriteSheet(6, 1);
+		else if (str == "ground.png")
+			sheet = SpriteSheet(3, 1);
 
 		if (sheet.loadFromFile(str))
 			mResources[str] = sheet;

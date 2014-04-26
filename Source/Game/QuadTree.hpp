@@ -8,7 +8,7 @@
 class Actor;
 
 const double QT_TICKRATE = 1.0 / 33.0;
-const int QT_ACTOR_MAXCOUNT = 0;
+const int QT_ACTOR_MAXCOUNT = 10;
 
 class QuadTreeLeaf
 {
