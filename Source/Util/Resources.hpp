@@ -44,6 +44,8 @@ private:
 			sheet = SpriteSheet(6, 1);
 		else if (str == "controller.png")
 			sheet = SpriteSheet(8, 2);
+		else if (str == "resources.png")
+			sheet = SpriteSheet(6, 2);
 
 		if (sheet.loadFromFile(str))
 			mResources[str] = sheet;

@@ -20,7 +20,7 @@
 
 namespace { sf::Font itemFont = FontFinder::findDefaultFont(); }
 
-Player::Player(InputSystem& sys) : mInp(sys), mInventory(45, sf::Vector2u(4, 1)), mOnGround(false), mFallSpeed(0), mAnim(0), mInBuilding(nullptr)
+Player::Player(InputSystem& sys) : mInp(sys), mInventory(45, 4), mOnGround(false), mFallSpeed(0), mAnim(0), mInBuilding(nullptr)
 {
 	mSheet = Resources::SpriteSheets["player.png"];
 }
@@ -46,56 +46,131 @@ void Player::update(double dt)
 	{
 		if (mInp["Cancel"].pressed())
 		{
-			mInBuilding->doorOpen();
-			mInBuilding->mPlayer = nullptr;
-			mInBuilding = nullptr;
-		}
-		else if (mInp["Accept"].pressed())
-		{
-			switch (mInBuilding->mSelectedEntry)
+			if (mInBuilding->mCurMenu == Building::Menu_Main)
 			{
-			case 0:
 				mInBuilding->doorOpen();
 				mInBuilding->mPlayer = nullptr;
 				mInBuilding = nullptr;
+			}
+			else
+			{
+				mInBuilding->mCurMenu = Building::Menu_Main;
+				mInBuilding->mSelectedInventorySlot = 0;
+			}
+		}
+		else if (mInp["Accept"].pressed())
+		{
+			switch (mInBuilding->mCurMenu)
+			{
+			case Building::Menu_Main:
+				switch (mInBuilding->mSelectedEntry)
+				{
+				case 0:
+					mInBuilding->doorOpen();
+					mInBuilding->mPlayer = nullptr;
+					mInBuilding = nullptr;
+					break;
+
+				case 1:
+					mInBuilding->mCurMenu = Building::Menu_Inventory;
+					break;
+
+				case 2:
+					mInBuilding->mCurMenu = Building::Menu_Crafting;
+					break;
+				}
 				break;
-				
-			case 1:
-				if (mInventory.getItem())
+
+			case Building::Menu_Inventory:
+				if (mInventory.getItem() && !mInBuilding->mInventory.getItem(mInBuilding->mSelectedInventorySlot))
 				{
 					mInBuilding->mInventory.addItem(mInventory.getItem(0));
 					mInventory.removeItem(mInventory.getItem(0));
 				}
-				break;
-
-			case 2:
-				if (!mInventory.getItem() && mInBuilding->mInventory.getItem())
+				else if (mInventory.getItem() && mInBuilding->mInventory.getItem(mInBuilding->mSelectedInventorySlot))
 				{
-					mInventory.addItem(mInBuilding->mInventory.getItem(0));
-					mInBuilding->mInventory.removeItem(mInventory.getItem(0));
+					auto temp = mInventory.getItem();
+					mInventory.removeItem(temp);
+					mInventory.addItem(mInBuilding->mInventory.getItem(mInBuilding->mSelectedInventorySlot));
+					mInBuilding->mInventory.removeItem(mInventory.getItem());
+					mInBuilding->mInventory.addItem(temp);
+				}
+				else if (mInBuilding->mInventory.getItem(mInBuilding->mSelectedInventorySlot) && mInventory.freeSlots() > 0)
+				{
+					auto item = mInBuilding->mInventory.getItem(mInBuilding->mSelectedInventorySlot);
+					mInventory.addItem(item);
+					mInBuilding->mInventory.removeItem(item);
 				}
 				break;
 			}
+			
 		}
 
 		if (mInp["Up"].pressed())
 		{
-			--mInBuilding->mSelectedEntry;
-
-			if (mInBuilding->mSelectedEntry < 0)
+			if (mInBuilding->mCurMenu == Building::Menu_Main)
 			{
-				mInBuilding->mSelectedEntry = 5;
-				mInBuilding->mMenuAnim += 6;
+				--mInBuilding->mSelectedEntry;
+
+				if (mInBuilding->mSelectedEntry < 0)
+				{
+					mInBuilding->mSelectedEntry = 5;
+					mInBuilding->mMenuAnim += 6;
+				}
+			}
+			else if (mInBuilding->mCurMenu == Building::Menu_Inventory)
+			{
+				mInBuilding->mSelectedInventorySlot -= 10;
+				if (mInBuilding->mSelectedInventorySlot < 0)
+				{
+					mInBuilding->mSelectedInventorySlot = (mInBuilding->mInventory.totalSlots() + mInBuilding->mSelectedInventorySlot);
+				}
 			}
 		}
 		else if (mInp["Down"].pressed())
 		{
-			++mInBuilding->mSelectedEntry;
-
-			if (mInBuilding->mSelectedEntry > 5)
+			if (mInBuilding->mCurMenu == Building::Menu_Main)
 			{
-				mInBuilding->mSelectedEntry = 0;
-				mInBuilding->mMenuAnim -= 6;
+				++mInBuilding->mSelectedEntry;
+
+				if (mInBuilding->mSelectedEntry > 5)
+				{
+					mInBuilding->mSelectedEntry = 0;
+					mInBuilding->mMenuAnim -= 6;
+				}
+			}
+			else if (mInBuilding->mCurMenu == Building::Menu_Inventory)
+			{
+				mInBuilding->mSelectedInventorySlot += 10;
+				if (mInBuilding->mSelectedInventorySlot >= mInBuilding->mInventory.totalSlots())
+				{
+					mInBuilding->mSelectedInventorySlot = (mInBuilding->mSelectedInventorySlot - mInBuilding->mInventory.totalSlots());
+				}
+			}
+		}
+
+		if (mInp["Left"].pressed())
+		{
+			if (mInBuilding->mCurMenu == Building::Menu_Inventory)
+			{
+				auto row = mInBuilding->mSelectedInventorySlot / 10;
+				--mInBuilding->mSelectedInventorySlot;
+				if (row != mInBuilding->mSelectedInventorySlot / 10)
+				{
+					mInBuilding->mSelectedInventorySlot += 10;
+				}
+			}
+		}
+		else if (mInp["Right"].pressed())
+		{
+			if (mInBuilding->mCurMenu == Building::Menu_Inventory)
+			{
+				auto row = mInBuilding->mSelectedInventorySlot / 10;
+				++mInBuilding->mSelectedInventorySlot;
+				if (row != mInBuilding->mSelectedInventorySlot / 10)
+				{
+					mInBuilding->mSelectedInventorySlot -= 10;
+				}
 			}
 		}
 	}
@@ -258,7 +333,10 @@ void Player::draw(sf::RenderTarget& target)
 {
 	if (mInBuilding)
 	{
-		mInBuilding->drawMenu(target);
+		mInBuilding->drawMenu(target, Building::Menu_Main);
+
+		if (mInBuilding->mCurMenu != Building::Menu_Main)
+			mInBuilding->drawMenu(target, mInBuilding->mCurMenu);
 	}
 	else
 	{
@@ -343,6 +421,9 @@ void Player::drawUi(sf::RenderTarget& target)
 		if (!item)
 			break;
 
+		item->draw(target, sf::Vector2f(UI_RADIUS + 25, target.getView().getSize().y - UI_RADIUS - 25));
+
+		/*
 		text.setString(item->getName());
 		auto rect = text.getLocalBounds();
 		text.setOrigin(rect.width / 2.f, rect.height / 2.f);
@@ -350,6 +431,7 @@ void Player::drawUi(sf::RenderTarget& target)
 		target.draw(text);
 
 		text.move(0, rect.height + 8);
+		*/
 
 		prog.setValue(item->getWeight() / item->maxWeight());
 	}

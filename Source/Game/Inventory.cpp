@@ -2,7 +2,7 @@
 #include "Item.hpp"
 #include <algorithm>
 
-Inventory::Inventory(double weightLimit, const sf::Vector2u& slotAmount) : mWeightLimit(weightLimit), mSlots(slotAmount)
+Inventory::Inventory(double weightLimit, uint32_t slotAmount) : mWeightLimit(weightLimit), mSlots(slotAmount)
 {
 
 }
@@ -44,13 +44,10 @@ void Inventory::addItem(Item* item)
 void Inventory::removeItem(Item* item)
 {
 	auto it = std::remove_if(mItems.begin(), mItems.end(), [item](Item* it) { return it == item; });
-
-	mItems.erase(it);
-}
-
-uint32_t Inventory::usedSlots() const
-{
-	return (mSlots.x * mSlots.y) - mItems.size();
+	if (it != mItems.end())
+	{
+		mItems.erase(it);
+	}
 }
 
 double Inventory::getCurWeight() const
@@ -59,7 +56,7 @@ double Inventory::getCurWeight() const
 
 	std::for_each(mItems.begin(), mItems.end(), [&weight](Item* i) { weight += i->getWeight(); });
 
-	return 0;
+	return weight;
 }
 
 bool Inventory::maxWeightReached()

@@ -9,7 +9,7 @@ class Item;
 class Inventory
 {
 public:
-	Inventory(double mWeightLimit, const sf::Vector2u& slotAmount);
+	Inventory(double mWeightLimit, uint32_t slotAmount);
 	~Inventory();
 
 	Item* getItem(uint32_t id = 0) const;
@@ -18,8 +18,9 @@ public:
 	void removeItem(Item* item);
 	inline bool empty() const { return mItems.empty(); }
 	
-	uint32_t usedSlots() const;
-	inline uint32_t freeSlots() const { return (mSlots.x + mSlots.y) - usedSlots(); }
+	inline uint32_t usedSlots() const { return mItems.size(); }
+	inline uint32_t freeSlots() const { return (mSlots) - usedSlots(); }
+	inline uint32_t totalSlots() const { return mSlots; }
 
 	double getCurWeight() const;
 	inline double getWeightLimit() const { return mWeightLimit; }
@@ -27,6 +28,6 @@ public:
 
 private:
 	double mWeightLimit;
-	sf::Vector2u mSlots;
+	uint32_t mSlots;
 	std::vector<Item*> mItems;
 };
