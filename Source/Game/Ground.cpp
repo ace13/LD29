@@ -93,6 +93,11 @@ void Ground::update(double dt)
 {
 	if (!dug())
 		mDug = std::max(0.0, mDug - dt / 10);
+
+	if (mOre && mOre->getAmount() <= 0 && mDug < 1)
+	{
+		mDug = 1;
+	}
 }
 
 void Ground::draw(sf::RenderTarget& target)

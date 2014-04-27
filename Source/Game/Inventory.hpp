@@ -13,7 +13,9 @@ public:
 	~Inventory();
 
 	Item* getItem(uint32_t id = 0) const;
+	Item* getItem(const std::string& name) const;
 	void addItem(Item* item);
+	void removeItem(Item* item);
 	inline bool empty() const { return mItems.empty(); }
 	
 	uint32_t usedSlots() const;

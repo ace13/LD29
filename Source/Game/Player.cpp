@@ -7,11 +7,18 @@
 #include "World.hpp"
 #include "Building.hpp"
 #include "../Util/ShapeDraw.hpp"
+#include "../Util/FontFinder.hpp"
+
+#include "Items/MinedOre.hpp"
+#include "Items/Wood.hpp"
 
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Text.hpp>
+
+namespace { sf::Font itemFont = FontFinder::findDefaultFont(); }
 
 Player::Player(InputSystem& sys) : mInp(sys), mInventory(45, sf::Vector2u(4, 1)), mOnGround(false), mFallSpeed(0), mAnim(0), mInBuilding(nullptr)
 {
@@ -45,15 +52,29 @@ void Player::update(double dt)
 		}
 		else if (mInp["Accept"].pressed())
 		{
-			if (mInBuilding->mSelectedEntry == 0)
+			switch (mInBuilding->mSelectedEntry)
 			{
+			case 0:
 				mInBuilding->doorOpen();
 				mInBuilding->mPlayer = nullptr;
 				mInBuilding = nullptr;
-			}
-			else
-			{
+				break;
+				
+			case 1:
+				if (mInventory.getItem())
+				{
+					mInBuilding->mInventory.addItem(mInventory.getItem(0));
+					mInventory.removeItem(mInventory.getItem(0));
+				}
+				break;
 
+			case 2:
+				if (!mInventory.getItem() && mInBuilding->mInventory.getItem())
+				{
+					mInventory.addItem(mInBuilding->mInventory.getItem(0));
+					mInBuilding->mInventory.removeItem(mInventory.getItem(0));
+				}
+				break;
 			}
 		}
 
@@ -158,11 +179,45 @@ void Player::update(double dt)
 			{
 				if (typeid(*act) == typeid(Ground&))
 				{
-					((Ground*)act)->dig(dt);
+					Ground* ground = dynamic_cast<Ground*>(act);
+					if (ground->dug())
+						continue;
+
+					if (ground->hasOre())
+					{
+						Ore* ore = ground->getOre();
+						MinedOre* mined = dynamic_cast<MinedOre*>(mInventory.getItem());
+						if (!mined && mInventory.freeSlots() > 0)
+						{
+							mined = new MinedOre(ore->getType());
+							mInventory.addItem(mined);
+						}
+
+						if (!mined)
+							continue;
+
+						ore->removeAmount(dt);
+						mined->addAmount(dt);
+					}
+					else
+					{
+						((Ground*)act)->dig(dt);
+					}
 				}
 				else if (typeid(*act) == typeid(Tree&))
 				{
+					Wood* wood = dynamic_cast<Wood*>(mInventory.getItem("Wood"));
+					if (!wood && mInventory.freeSlots() > 0)
+					{
+						wood = new Wood();
+						mInventory.addItem(wood);
+					}
+
+					if (!wood)
+						continue;
+
 					((Tree*)act)->chop(dt);
+					wood->addAmount(dt);
 				}
 			}
 		}
@@ -270,28 +325,34 @@ void Player::drawUi(sf::RenderTarget& target)
 	shape.setFillColor(sf::Color::Black);
 
 	Shapes::RadialProgressBar prog;
-
+	prog.setBackgroundColor(sf::Color(0, 125, 0));
+	prog.setForegroundColor(sf::Color(0, 200, 0));
 	prog.setRadius(UI_RADIUS);
-
-	if ((int)mAnim % 2 == 0)
-	{
-		prog.setBackgroundColor(sf::Color(0, 125, 0));
-		prog.setForegroundColor(sf::Color(0, 200, 0));
-	}
-	else
-	{
-		prog.setForegroundColor(sf::Color(0, 125, 0));
-		prog.setBackgroundColor(sf::Color(0, 200, 0));
-	}
-
-	prog.setValue(std::fmod(mAnim, 1));
 
 	prog.setOrigin(UI_RADIUS + prog.getThickness() / 2.f, UI_RADIUS + prog.getThickness() / 2.f);
 	prog.setPosition(UI_RADIUS + 25, target.getView().getSize().y - UI_RADIUS - 25);
 	shape.setPosition(UI_RADIUS + 25, target.getView().getSize().y - UI_RADIUS - 25);
 	target.draw(shape);
 
-	
+	sf::Text text("", itemFont);
+	text.setPosition(UI_RADIUS + 25, target.getView().getSize().y - UI_RADIUS - 25);
+
+	for (uint32_t i = 0; i < mInventory.usedSlots(); ++i)
+	{
+		auto item = mInventory.getItem(i);
+		if (!item)
+			break;
+
+		text.setString(item->getName());
+		auto rect = text.getLocalBounds();
+		text.setOrigin(rect.width / 2.f, rect.height / 2.f);
+
+		target.draw(text);
+
+		text.move(0, rect.height + 8);
+
+		prog.setValue(item->getWeight() / item->maxWeight());
+	}
 
 	target.draw(prog);
 }

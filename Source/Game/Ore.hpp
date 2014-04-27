@@ -24,7 +24,14 @@ public:
 	void update(double dt);
 	void draw(sf::RenderTarget& target);
 
+	float getAmount() const { return mAmount; }
+	void removeAmount(float amount) { mAmount -= amount; }
+
+	Type getType() const { return mType; }
+
 private:
+	float mAmount;
+
 	SpriteSheet mSheet;
 	Ground* mGround;
 	Type mType;

@@ -16,7 +16,7 @@ uint32_t Ore::OreWeight(Type t, float depth)
 	}
 }
 
-Ore::Ore(Ground* g, Type t) : mGround(g), mType(t)
+Ore::Ore(Ground* g, Type t) : mGround(g), mType(t), mAmount(1)
 {
 	mSheet = Resources::SpriteSheets["ores.png"];
 }

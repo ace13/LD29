@@ -22,6 +22,7 @@ public:
 	bool dug() const;
 
 	bool hasOre() const { return mOre; }
+	Ore* getOre() const { return mOre; }
 
 	void genOre();
 	void setType(Type t);
