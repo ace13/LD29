@@ -112,6 +112,23 @@ void MenuState::draw(sf::RenderTarget& target)
 		title.setOrigin(rect.width / 2.f, 0);
 	}
 	target.draw(title);
+
+	title.move(title.getLocalBounds().width / 2.f + 10, 10);
+	title.setCharacterSize(16U);
+	title.setString("*");
+	{
+		auto rect = title.getLocalBounds();
+		title.setOrigin(rect.width / 2.f, 0);
+	}
+	target.draw(title);
+
+	title.setPosition(target.getView().getSize().x / 2.f, target.getView().getSize().y);
+	title.setString("* Gameplay may actually be average");
+	{
+		auto rect = title.getLocalBounds();
+		title.setOrigin(rect.width / 2.f, rect.height);
+	}
+	target.draw(title);
 	
 	std::for_each(mMenuStack.begin(), mMenuStack.end(), [&target](std::shared_ptr<MenuPage>& page) { page->draw(target); });
 }

@@ -71,7 +71,7 @@ void Player::update(double dt)
 					mInBuilding->doorOpen();
 					mInBuilding->mPlayer = nullptr;
 					mInBuilding = nullptr;
-					break;
+					return;
 
 				case 1:
 					mInBuilding->mCurMenu = Building::Menu_Inventory;
@@ -150,7 +150,7 @@ void Player::update(double dt)
 						auto item = Recipes::followRecipe(selected);
 						
 						auto pInv = mInventory.getItem();
-						if (pInv && pInv->getName() == item->getName())
+						if (pInv && pInv->getName() == item->getName() && pInv->getWeight() + item->getWeight() <= pInv->maxWeight())
 						{
 							pInv->addAmount(item->getAmount());
 							delete item;
@@ -326,9 +326,10 @@ void Player::update(double dt)
 							}
 						}
 					}
-					else if (pos.y < mPosition.y && std::abs(pos.x - mPosition.x) < 27 && mFallSpeed < 0)
+					else if (pos.y < mPosition.y && std::abs(pos.x - mPosition.x) < 27)
 					{
-						mFallSpeed = 0;
+						if (mFallSpeed < 0)
+							mFallSpeed = 0;
 						if (mSpeed.y < 0)
 							mSpeed.y = 0;
 					}
@@ -379,7 +380,7 @@ void Player::update(double dt)
 							mInventory.addItem(mined);
 						}
 
-						if (!mined)
+						if (!mined || mined->getWeight() >= mined->maxWeight())
 							continue;
 
 						ore->removeAmount(dt);
@@ -399,7 +400,7 @@ void Player::update(double dt)
 						mInventory.addItem(wood);
 					}
 
-					if (!wood)
+					if (!wood || wood->getWeight() >= wood->maxWeight())
 						continue;
 
 					((Tree*)act)->chop(dt * 2);
@@ -431,13 +432,13 @@ void Player::update(double dt)
 			if (!found)
 			{
 				auto item = mInventory.getItem();
-
+				if (item)
 				if (typeid(*item) == typeid(Ladder::LadderItem&) && item->getAmount() > 0)
 				{
 					Ladder* l = new Ladder();
-					l->setPosition((sf::Vector2f)(((sf::Vector2i)((mPosition) / 30.f)) * 30) - sf::Vector2f(15, 15));
+					l->setPosition((sf::Vector2f)((sf::Vector2f)(sf::Vector2i(std::round(mPosition.x / 30.f), std::round(mPosition.y / 30.f))) * 30.f) - sf::Vector2f(15, 15));
 
-					auto found = mQT->getAllActors(sf::FloatRect(l->getPosition().x - 10, l->getPosition().y - 10, 20, 20));
+					auto found = mQT->getAllActors(sf::FloatRect(l->getPosition().x - 5, l->getPosition().y - 5, 30, 30));
 
 					for (auto act : found)
 					{
@@ -446,6 +447,16 @@ void Player::update(double dt)
 							delete l;
 							l = nullptr;
 							break;
+						}
+						else if (typeid(*act) == typeid(Ground&))
+						{
+							Ground* ground = dynamic_cast<Ground*>(act);
+							if (!ground->dug())
+							{
+								delete l;
+								l = nullptr;
+								break;
+							}
 						}
 					}
 
