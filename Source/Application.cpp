@@ -24,6 +24,8 @@ void Application::init(int argc, char** argv)
 
 }
 
+#include <iostream>
+
 int Application::run()
 {
 	mWindow.create(sf::VideoMode(1024, 768), "Ludum Dare #29");
@@ -44,6 +46,8 @@ int Application::run()
 		auto newFrame = std::chrono::high_resolution_clock::now();
 		std::chrono::nanoseconds frameTime = std::chrono::duration_cast<std::chrono::nanoseconds>(newFrame - framePoint);
 		framePoint = newFrame;
+
+		std::cout << frameTime.count() << "ns" << std::endl;
 
 		mStats.frame(frameTime);
 
