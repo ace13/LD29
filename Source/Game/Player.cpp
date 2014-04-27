@@ -181,6 +181,10 @@ void Player::update(double dt)
 				}
 			}
 		}
+		else if (mInp["Use"].curValue() > 0.4)
+		{
+
+		}
 
 		// Sanitize position
 		if (mPosition.x < -WORLD_HALFWIDTH_PIXELS + 15)
@@ -210,7 +214,7 @@ void Player::draw(sf::RenderTarget& target)
 			sf::Vector2f digDir(mInp["Right"].curValue() - mInp["Left"].curValue(), mInp["Down"].curValue() - mInp["Up"].curValue());
 			if ((digDir.x * digDir.x + digDir.y * digDir.y) > 0.25)
 			{
-				sprite.setTextureRect(mSheet.getRect(1 + (int)mAnim % 4, 1));
+				sprite.setTextureRect(mSheet.getRect(1 + (int)(mAnim*8) % 4, 1));
 
 				if (digDir.x < 0)
 					sprite.setScale(-1, 1);
@@ -218,7 +222,7 @@ void Player::draw(sf::RenderTarget& target)
 		}
 		else if (std::abs(mSpeed.x) > 0.1)
 		{
-			sprite.setTextureRect(mSheet.getRect(1 + (int)mAnim % 4, 0));
+			sprite.setTextureRect(mSheet.getRect(1 + (int)(mAnim*10) % 4, 0));
 			if (mSpeed.x < 0)
 				sprite.setScale(-1, 1);
 		}

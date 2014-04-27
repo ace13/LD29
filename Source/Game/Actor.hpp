@@ -8,6 +8,7 @@ class SplittableQuadTreeLeaf;
 class FinalQuadTreeLeaf;
 class QuadTreeLeaf;
 class QuadTree;
+class World;
 
 class Actor
 {
@@ -24,6 +25,7 @@ protected:
 	QuadTree* mQT;
 	QuadTreeLeaf* mQTLeaf;
 
+	friend class World;
 	friend class QuadTree;
 	friend class SplittableQuadTreeLeaf;
 	friend class FinalQuadTreeLeaf;

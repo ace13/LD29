@@ -105,6 +105,12 @@ void World::update(double dt)
 	for (auto i : act)
 	{
 		i->update(dt);
+
+		if (!i->mQT && !i->mQTLeaf)
+		{
+			delete i;
+			break;
+		}
 	}
 }
 

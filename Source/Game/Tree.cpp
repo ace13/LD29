@@ -36,7 +36,8 @@ Tree::~Tree()
 void Tree::chop()
 {
 	mQTLeaf->removeActor(this);
-	delete this;
+	mQTLeaf = nullptr;
+	mQT = nullptr;
 }
 
 void Tree::update(double dt)
