@@ -81,6 +81,7 @@ set(Menu_HEADERS
 set(Util_SOURCES
 	Util/Animation.cpp
 	Util/INI.cpp
+	Util/OBJLoader.cpp
 	Util/Resources.cpp
 	Util/ShapeDraw.cpp
 	Util/SpriteSheet.cpp
@@ -103,6 +104,7 @@ set(Util_HEADERS
 	Util/Animation.hpp
 	Util/FontFinder.hpp
 	Util/INI.hpp
+	Util/OBJLoader.hpp
 	Util/Resources.hpp
 	Util/ShapeDraw.hpp
 	Util/SpriteSheet.hpp
@@ -116,7 +118,7 @@ source_group(Util FILES ${Util_SOURCES} ${Util_HEADERS})
 
 add_executable(LD29 main.cpp ${Base_SOURCES} ${Base_HEADERS} ${Game_SOURCES} ${Game_HEADERS} ${Item_SOURCES} ${Item_HEADERS} ${Menu_SOURCES} ${Menu_HEADERS} ${Util_SOURCES} ${Util_HEADERS})
 if (WIN32)
-	target_link_libraries(LD29 ${SFML_LIBRARIES})
+	target_link_libraries(LD29 ${SFML_LIBRARIES} opengl32 glu32)
 else()
-	target_link_libraries(LD29 ${SFML_LIBRARIES} ${Fontconfig_LIBRARY})
+	target_link_libraries(LD29 ${SFML_LIBRARIES} ${Fontconfig_LIBRARY} GLU)
 endif()

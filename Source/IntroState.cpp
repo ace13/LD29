@@ -10,6 +10,7 @@
 IntroState::IntroState() : mTime(0)
 {
 	mFont = FontFinder::findDefaultFont();
+	mCard.loadFromFile("ace.obj");
 }
 
 IntroState::~IntroState()
@@ -19,11 +20,9 @@ IntroState::~IntroState()
 
 void IntroState::update(double dt)
 {
-#if _DEBUG
-	mTime += dt * 5;
-#else
-	mTime += dt / 5;
-#endif
+	mTime += dt / 6;
+
+	mCard.update(dt);
 
 	if (getInputs()["MenuExit"].pressed())
 		mTime = 1;
@@ -38,6 +37,8 @@ void IntroState::update(double dt)
 
 void IntroState::draw(sf::RenderTarget& target)
 {
+	target.draw(mCard);
+
 	sf::Text introText("<Intro placeholder>", mFont);
 	{
 		auto rect = introText.getLocalBounds();
@@ -48,7 +49,7 @@ void IntroState::draw(sf::RenderTarget& target)
 
 	target.draw(introText);
 
-	introText.setString("Made by Alexander \"Ace\" Olofsson for Ludum Dare #29 (Beneath the Surface)");
+	introText.setString("Made by Alexander \"Ace\" / \"Ananace\" Olofsson for Ludum Dare #29 (Beneath the Surface)");
 	introText.setCharacterSize(15U);
 	introText.setColor(sf::Color(128, 128, 128));
 
