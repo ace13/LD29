@@ -24,7 +24,6 @@ set(Game_SOURCES
 	Game/Building.cpp
 	Game/Ground.cpp
 	Game/Inventory.cpp
-	Game/Item.cpp
 	Game/Ladder.cpp
 	Game/Ore.cpp
 	Game/Player.cpp
@@ -43,6 +42,7 @@ set(Game_HEADERS
 	Game/Ore.hpp
 	Game/Player.hpp
 	Game/QuadTree.hpp
+	Game/Recipes.hpp
 	Game/Tree.hpp
 	Game/World.hpp
 )

@@ -210,4 +210,50 @@ void Building::drawMenu(sf::RenderTarget& target, MenuType type)
 			background.move(30, -30 * 5);
 		}
 	}
+	else if (mCurMenu == Menu_Crafting)
+	{
+		sf::RectangleShape background(sf::Vector2f(30.f * 10 + 10, 30.f * 5 + 10));
+		background.setOrigin(0, 0);
+		background.setFillColor(sf::Color(75, 75, 75, 200));
+		background.setOutlineThickness(1.f);
+		background.setOutlineColor(sf::Color::Black);
+
+		background.setPosition(mPosition + sf::Vector2f(35, -(30.f * 6 + 10)));
+
+		target.draw(background);
+
+		background.setFillColor(sf::Color::Transparent);
+		background.setSize(sf::Vector2f(120, 30 * 5));
+		background.move(5, 5);
+
+		target.draw(background);
+		background.setFillColor(sf::Color(255, 255, 255, 75));
+
+		sf::Text infoText("Ladder", mFont, 16U);
+		infoText.setPosition(background.getPosition());
+		infoText.move(60, 10);
+
+		std::string recipes[] = { "Ladder", "Bowl" };
+
+		int i = 0;
+		for (std::string& recipe : recipes)
+		{
+			infoText.setString(recipe);
+			{
+				auto rect = infoText.getLocalBounds();
+				infoText.setOrigin(rect.width / 2.f, rect.height / 2.f);
+				background.setSize(sf::Vector2f(120, rect.height + 6.f));
+				background.setOrigin(60, rect.height / 2.f);
+			}
+
+			background.setPosition(infoText.getPosition());
+			
+			if (i++ == mSelectedInventorySlot)
+				target.draw(background);
+
+			target.draw(infoText);
+
+			infoText.move(0, infoText.getLocalBounds().height + 10);
+		}
+	}
 }

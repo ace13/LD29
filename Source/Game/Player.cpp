@@ -76,6 +76,7 @@ void Player::update(double dt)
 					break;
 
 				case 2:
+					mInBuilding->mSelectedInventorySlot = 0;
 					mInBuilding->mCurMenu = Building::Menu_Crafting;
 					break;
 				}
@@ -134,6 +135,12 @@ void Player::update(double dt)
 					mInBuilding->mSelectedInventorySlot = (mInBuilding->mInventory.totalSlots() + mInBuilding->mSelectedInventorySlot);
 				}
 			}
+			else if (mInBuilding->mCurMenu == Building::Menu_Crafting)
+			{
+				--mInBuilding->mSelectedInventorySlot;
+				if (mInBuilding->mSelectedInventorySlot < 0)
+					mInBuilding->mSelectedInventorySlot = 0;
+			}
 		}
 		else if (mInp["Down"].pressed())
 		{
@@ -154,6 +161,12 @@ void Player::update(double dt)
 				{
 					mInBuilding->mSelectedInventorySlot = (mInBuilding->mSelectedInventorySlot - mInBuilding->mInventory.totalSlots());
 				}
+			}
+			else if (mInBuilding->mCurMenu == Building::Menu_Crafting)
+			{
+				++mInBuilding->mSelectedInventorySlot;
+				if (mInBuilding->mSelectedInventorySlot > 1)
+					mInBuilding->mSelectedInventorySlot = 1;
 			}
 		}
 
