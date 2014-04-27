@@ -47,8 +47,6 @@ int Application::run()
 		std::chrono::nanoseconds frameTime = std::chrono::duration_cast<std::chrono::nanoseconds>(newFrame - framePoint);
 		framePoint = newFrame;
 
-		std::cout << frameTime.count() << "ns" << std::endl;
-
 		mStats.frame(frameTime);
 
 		while (mWindow.pollEvent(ev))
@@ -68,7 +66,7 @@ int Application::run()
 			mState.handleEvent(ev);
 		}
 			
-		double dt = std::min(0.10, (frameTime.count() / 1000000000.0));
+		double dt = std::min(0.10, std::chrono::duration<double, std::ratio<1>>(frameTime).count());
 		mInput.update(dt);
 		mState.update(dt);
 
