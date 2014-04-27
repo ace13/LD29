@@ -93,7 +93,7 @@ void MenuState::draw(sf::RenderTarget& target)
 	rect.setFillColor(sf::Color(0, 0, 0, 200));
 	target.draw(rect);
 
-	sf::Text title("<Title Goes Here>", def, 64U);
+	sf::Text title("Earth Mining Rage", def, 64U);
 
 	{
 		auto rect = title.getLocalBounds();

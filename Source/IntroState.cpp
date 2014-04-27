@@ -47,7 +47,7 @@ void IntroState::draw(sf::RenderTarget& target)
 
 	introText.setPosition(target.getView().getCenter());
 
-	target.draw(introText);
+	//target.draw(introText);
 
 	introText.setString("Made by Alexander \"Ace\" / \"Ananace\" Olofsson for Ludum Dare #29 (Beneath the Surface)");
 	introText.setCharacterSize(15U);

@@ -27,9 +27,9 @@ void Settings::loadSettings()
 	if (!hasSetting("input", "sDig"))
 		setSetting("input", "sDig", "KB 16");
 	if (!hasSetting("input", "sAccept"))
-		setSetting("input", "sAccept", "KB 58");
+		setSetting("input", "sAccept", "KB 4");
 	if (!hasSetting("input", "sCancel"))
-		setSetting("input", "sCancel", "KB 36");
+		setSetting("input", "sCancel", "KB 16");
 }
 void Settings::saveSettings()
 {
