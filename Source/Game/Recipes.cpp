@@ -52,6 +52,7 @@ size_t Recipes::getRecipeCount()
 }
 
 #include "Ladder.hpp"
+#include "Items/Sapling.hpp"
 
 namespace
 {
@@ -61,6 +62,7 @@ namespace
 		DefaultRecipes()
 		{
 			Recipes::registerRecipe<Ladder::LadderItem>("Ladder", { { "Wood", 2.f } });
+			Recipes::registerRecipe<Sapling>("Sapling", { { "Wood", 0.5f } });
 		}
 	} registerer;
 }

@@ -51,6 +51,7 @@ set(Game_HEADERS
 set(Item_SOURCES
 	Game/Items/ConstructionKit.cpp
 	Game/Items/MinedOre.cpp
+	Game/Items/Sapling.cpp
 	Game/Items/Tool.cpp
 	Game/Items/Wood.cpp	
 )
@@ -58,6 +59,7 @@ set(Item_SOURCES
 set(Item_HEADERS
 	Game/Items/ConstructionKit.hpp
 	Game/Items/MinedOre.hpp
+	Game/Items/Sapling.hpp
 	Game/Items/Tool.hpp
 	Game/Items/Wood.hpp	
 )

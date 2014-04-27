@@ -11,6 +11,7 @@
 
 #include "Items/MinedOre.hpp"
 #include "Items/Wood.hpp"
+#include "Items/Sapling.hpp"
 #include "Recipes.hpp"
 #include "Ladder.hpp"
 
@@ -433,43 +434,75 @@ void Player::update(double dt)
 			{
 				auto item = mInventory.getItem();
 				if (item)
-				if (typeid(*item) == typeid(Ladder::LadderItem&) && item->getAmount() > 0)
 				{
-					Ladder* l = new Ladder();
-					l->setPosition((sf::Vector2f)((sf::Vector2f)(sf::Vector2i(std::round(mPosition.x / 30.f), std::round(mPosition.y / 30.f))) * 30.f) - sf::Vector2f(15, 15));
-
-					auto found = mQT->getAllActors(sf::FloatRect(l->getPosition().x - 5, l->getPosition().y - 5, 30, 30));
-
-					for (auto act : found)
+					if (typeid(*item) == typeid(Ladder::LadderItem&) && item->getAmount() > 0)
 					{
-						if (typeid(*act) == typeid(Ladder&))
+						Ladder* l = new Ladder();
+						l->setPosition((sf::Vector2f)((sf::Vector2f)(sf::Vector2i(std::round(mPosition.x / 30.f), std::round(mPosition.y / 30.f))) * 30.f) - sf::Vector2f(15, 15));
+
+						auto found = mQT->getAllActors(sf::FloatRect(l->getPosition().x - 5, l->getPosition().y - 5, 30, 30));
+
+						for (auto act : found)
 						{
-							delete l;
-							l = nullptr;
-							break;
+							if (typeid(*act) == typeid(Ladder&))
+							{
+								delete l;
+								l = nullptr;
+								break;
+							}
+							else if (typeid(*act) == typeid(Ground&))
+							{
+								Ground* ground = dynamic_cast<Ground*>(act);
+								if (!ground->dug())
+								{
+									delete l;
+									l = nullptr;
+									break;
+								}
+							}
 						}
-						else if (typeid(*act) == typeid(Ground&))
+
+						if (l)
 						{
-							Ground* ground = dynamic_cast<Ground*>(act);
-							if (!ground->dug())
+							mQT->addActor(l);
+
+							item->removeAmount(1);
+
+							if (item->getAmount() <= 0)
+							{
+								mInventory.removeItem(item);
+								delete item;
+							}
+						}
+					}
+					else if (typeid(*item) == typeid(Sapling&) && item->getAmount() > 0)
+					{
+						Tree* l = new Tree();
+						l->setPosition((sf::Vector2f)((sf::Vector2f)(sf::Vector2i(std::round(mPosition.x / 30.f), std::round(mPosition.y / 30.f))) * 30.f) - sf::Vector2f(15, 15));
+
+						auto found = mQT->getAllActors(sf::FloatRect(l->getPosition().x - 5, l->getPosition().y - 5, 30, 30));
+
+						for (auto act : found)
+						{
+							if (typeid(*act) != typeid(Player&))
 							{
 								delete l;
 								l = nullptr;
 								break;
 							}
 						}
-					}
 
-					if (l)
-					{
-						mQT->addActor(l);
-
-						item->removeAmount(1);
-
-						if (item->getAmount() <= 0)
+						if (l)
 						{
-							mInventory.removeItem(item);
-							delete item;
+							mQT->addActor(l);
+
+							item->removeAmount(1);
+
+							if (item->getAmount() <= 0)
+							{
+								mInventory.removeItem(item);
+								delete item;
+							}
 						}
 					}
 				}
