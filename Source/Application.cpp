@@ -90,7 +90,7 @@ int Application::run()
 
 		mWindow.display();
 
-		std::this_thread::sleep_for(std::chrono::microseconds(500));
+		std::this_thread::sleep_for(std::chrono::milliseconds(2));
 	}
 
 	return 0;
