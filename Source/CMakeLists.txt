@@ -28,6 +28,7 @@ set(Game_SOURCES
 	Game/Ore.cpp
 	Game/Player.cpp
 	Game/QuadTree.cpp
+	Game/Recipes.cpp
 	Game/Tree.cpp
 	Game/World.cpp
 )

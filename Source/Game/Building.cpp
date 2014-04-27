@@ -4,6 +4,7 @@
 #include "../Util/ShapeDraw.hpp"
 #include "../Util/FontFinder.hpp"
 #include "Item.hpp"
+#include "Recipes.hpp"
 
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -229,11 +230,11 @@ void Building::drawMenu(sf::RenderTarget& target, MenuType type)
 		target.draw(background);
 		background.setFillColor(sf::Color(255, 255, 255, 75));
 
-		sf::Text infoText("Ladder", mFont, 16U);
+		sf::Text infoText("<Recipe>", mFont, 16U);
 		infoText.setPosition(background.getPosition());
 		infoText.move(60, 10);
 
-		std::string recipes[] = { "Ladder", "Bowl" };
+		auto recipes = Recipes::getAllRecipes();
 
 		int i = 0;
 		for (std::string& recipe : recipes)
@@ -252,6 +253,11 @@ void Building::drawMenu(sf::RenderTarget& target, MenuType type)
 				target.draw(background);
 
 			target.draw(infoText);
+
+			if (i++ == mSelectedInventorySlot)
+			{
+				// Draw crafting recipe
+			}
 
 			infoText.move(0, infoText.getLocalBounds().height + 10);
 		}

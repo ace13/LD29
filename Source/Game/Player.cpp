@@ -11,6 +11,7 @@
 
 #include "Items/MinedOre.hpp"
 #include "Items/Wood.hpp"
+#include "Recipes.hpp"
 
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -164,9 +165,11 @@ void Player::update(double dt)
 			}
 			else if (mInBuilding->mCurMenu == Building::Menu_Crafting)
 			{
+				auto temp = Recipes::getRecipeCount() - 1;
+
 				++mInBuilding->mSelectedInventorySlot;
-				if (mInBuilding->mSelectedInventorySlot > 1)
-					mInBuilding->mSelectedInventorySlot = 1;
+				if (mInBuilding->mSelectedInventorySlot > temp)
+					mInBuilding->mSelectedInventorySlot = temp;
 			}
 		}
 
