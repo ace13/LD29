@@ -20,6 +20,9 @@ public:
 
 	void dig(double dt);
 	bool dug() const;
+
+	bool hasOre() const { return mOre; }
+
 	void genOre();
 	void setType(Type t);
 

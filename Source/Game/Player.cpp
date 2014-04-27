@@ -118,12 +118,17 @@ void Player::update(double dt)
 							mSpeed.x = 0;
 						else if (pos.x > mPosition.x && mSpeed.x > 0)
 							mSpeed.x = 0;
-					}
-					else if (pos.y > mPosition.y)
-					{
-						if (std::abs(pos.x - mPosition.x) < 27 && mFallSpeed >= 0)
-							mOnGround = true;
 
+						if (intersect.width > 15 && intersect.height > 15)
+							mPosition.y -= intersect.height;
+					}
+					else if (pos.y >= mPosition.y)
+					{
+						if (std::abs(pos.x - mPosition.x) < 27)
+						{
+							if (mFallSpeed >= 0)
+								mOnGround = true;
+						}
 					}
 					else if (pos.y < mPosition.y && std::abs(pos.x - mPosition.x) < 27 && mFallSpeed < 0)
 						mFallSpeed = 0;
@@ -202,5 +207,30 @@ void Player::draw(sf::RenderTarget& target)
 		sprite.setPosition(mPosition);
 
 		target.draw(sprite);
+
+		Shapes::BoundInput inpDraw;
+		inpDraw.setScale(0.75, 0.75);
+		auto test = mQT->getAllActors(sf::FloatRect(mPosition.x - 35, mPosition.y - 35, 70, 70));
+		for (auto act : test)
+		{
+			if (typeid(*act) == typeid(Building&))
+			{
+				inpDraw.setPosition(act->getPosition() - sf::Vector2f(7.5, 45));
+				inpDraw.setBind(mInp["Use"]);
+				target.draw(inpDraw);
+			}
+			else if (typeid(*act) == typeid(Tree&))
+			{
+				inpDraw.setPosition(act->getPosition() - sf::Vector2f(7.5, 45));
+				inpDraw.setBind(mInp["Dig"]);
+				target.draw(inpDraw);
+			}
+			else if (typeid(*act) == typeid(Ground&) && ((Ground*)act)->hasOre() && !((Ground*)act)->dug())
+			{
+				inpDraw.setPosition(act->getPosition() - sf::Vector2f(7.5, 45));
+				inpDraw.setBind(mInp["Dig"]);
+				target.draw(inpDraw);
+			}
+		}
 	}
 }
