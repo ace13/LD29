@@ -11,7 +11,7 @@
 #include <gl/GLU.h>
 #else
 #include <GL/gl.h>
-#include <GL/glut.h>
+#include <GL/glu.h>
 #endif
 
 OBJFile::OBJFile() : mTime(0)
