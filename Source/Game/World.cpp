@@ -134,5 +134,5 @@ void World::draw(sf::RenderTarget& target)
 
 	mPlayer->draw(target);
 
-	//mQuadTree.draw(target);
+	// mQuadTree.draw(target);
 }

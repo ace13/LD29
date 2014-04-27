@@ -13,7 +13,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
-Player::Player(InputSystem& sys) : mInp(sys), mOnGround(false), mFallSpeed(0), mAnim(0), mInBuilding(nullptr)
+Player::Player(InputSystem& sys) : mInp(sys), mInventory(45, sf::Vector2u(4, 1)), mOnGround(false), mFallSpeed(0), mAnim(0), mInBuilding(nullptr)
 {
 	mSheet = Resources::SpriteSheets["player.png"];
 }
@@ -272,13 +272,26 @@ void Player::drawUi(sf::RenderTarget& target)
 	Shapes::RadialProgressBar prog;
 
 	prog.setRadius(UI_RADIUS);
-	prog.setBackgroundColor(sf::Color(0, 175, 0));
-	prog.setForegroundColor(sf::Color(0, 200, 0));
-	prog.setValue(0.5);
+
+	if ((int)mAnim % 2 == 0)
+	{
+		prog.setBackgroundColor(sf::Color(0, 125, 0));
+		prog.setForegroundColor(sf::Color(0, 200, 0));
+	}
+	else
+	{
+		prog.setForegroundColor(sf::Color(0, 125, 0));
+		prog.setBackgroundColor(sf::Color(0, 200, 0));
+	}
+
+	prog.setValue(std::fmod(mAnim, 1));
 
 	prog.setOrigin(UI_RADIUS + prog.getThickness() / 2.f, UI_RADIUS + prog.getThickness() / 2.f);
 	prog.setPosition(UI_RADIUS + 25, target.getView().getSize().y - UI_RADIUS - 25);
 	shape.setPosition(UI_RADIUS + 25, target.getView().getSize().y - UI_RADIUS - 25);
 	target.draw(shape);
+
+	
+
 	target.draw(prog);
 }

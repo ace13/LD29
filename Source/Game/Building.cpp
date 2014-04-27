@@ -9,7 +9,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
-Building::Building() : mDoorAnim(0), mMenuAnim(0), mSelectedEntry(0)
+Building::Building() : mInventory(-1, sf::Vector2u(10, 5)), mDoorAnim(0), mMenuAnim(0), mSelectedEntry(0)
 {
 	mSheet = Resources::SpriteSheets["building.png"];
 	mMenuSheet = Resources::SpriteSheets["buildingmenu.png"];

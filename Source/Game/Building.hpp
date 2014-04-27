@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Actor.hpp"
+#include "Inventory.hpp"
 #include "../Util/SpriteSheet.hpp"
 #include <SFML/Graphics/Font.hpp>
 
@@ -20,6 +21,7 @@ public:
 	void drawMenu(sf::RenderTarget& target);
 
 private:
+	Inventory mInventory;
 	double mDoorAnim, mMenuAnim;
 	int mSelectedEntry;
 	sf::Font mFont;

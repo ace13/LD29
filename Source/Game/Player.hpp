@@ -1,7 +1,9 @@
 #pragma once
 
 #include "Actor.hpp"
+#include "Inventory.hpp"
 #include "../Util/SpriteSheet.hpp"
+
 class InputSystem;
 class Building;
 
@@ -20,6 +22,7 @@ public:
 
 private:
 	SpriteSheet mSheet;
+	Inventory mInventory;
 	InputSystem& mInp;
 	sf::Vector2f mPosition, mSpeed;
 	float mFallSpeed, mAnim;
