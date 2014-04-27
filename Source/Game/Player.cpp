@@ -20,7 +20,7 @@
 
 namespace { sf::Font itemFont = FontFinder::findDefaultFont(); }
 
-Player::Player(InputSystem& sys) : mInp(sys), mInventory(45, 4), mOnGround(false), mFallSpeed(0), mAnim(0), mInBuilding(nullptr)
+Player::Player(InputSystem& sys) : mInp(sys), mInventory(45, 1), mOnGround(false), mFallSpeed(0), mAnim(0), mInBuilding(nullptr)
 {
 	mSheet = Resources::SpriteSheets["player.png"];
 }
@@ -90,10 +90,18 @@ void Player::update(double dt)
 				else if (mInventory.getItem() && mInBuilding->mInventory.getItem(mInBuilding->mSelectedInventorySlot))
 				{
 					auto temp = mInventory.getItem();
-					mInventory.removeItem(temp);
-					mInventory.addItem(mInBuilding->mInventory.getItem(mInBuilding->mSelectedInventorySlot));
-					mInBuilding->mInventory.removeItem(mInventory.getItem());
-					mInBuilding->mInventory.addItem(temp);
+					if (temp->getName() == mInBuilding->mInventory.getItem(mInBuilding->mSelectedInventorySlot)->getName())
+					{
+						mInventory.removeItem(temp);
+						mInBuilding->mInventory.addItem(temp);
+					}
+					else
+					{
+						mInventory.removeItem(temp);
+						mInventory.addItem(mInBuilding->mInventory.getItem(mInBuilding->mSelectedInventorySlot));
+						mInBuilding->mInventory.removeItem(mInventory.getItem());
+						mInBuilding->mInventory.addItem(temp);
+					}
 				}
 				else if (mInBuilding->mInventory.getItem(mInBuilding->mSelectedInventorySlot) && mInventory.freeSlots() > 0)
 				{
@@ -418,8 +426,6 @@ void Player::drawUi(sf::RenderTarget& target)
 	for (uint32_t i = 0; i < mInventory.usedSlots(); ++i)
 	{
 		auto item = mInventory.getItem(i);
-		if (!item)
-			break;
 
 		item->draw(target, sf::Vector2f(UI_RADIUS + 25, target.getView().getSize().y - UI_RADIUS - 25));
 
