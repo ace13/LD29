@@ -4,6 +4,8 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Graphics/Transformable.hpp>
 #include <SFML/Graphics/RenderTexture.hpp>
+#include "../InputSystem.hpp"
+#include "SpriteSheet.hpp"
 
 namespace Shapes
 {
@@ -69,5 +71,24 @@ namespace Shapes
 
 		bool mDoTextureCaching;
 		sf::RenderTexture mTextureCache;
+	};
+
+	class BoundInput : public sf::Transformable, public sf::Drawable
+	{
+	public:
+		BoundInput();
+		~BoundInput();
+		
+		inline bool getPressed() const { return mPressed; }
+		
+		inline void setBind(const InputSystem::Bind& b) { mBind = b; }
+		inline void setPressed(bool pressed) { mPressed = pressed; }
+
+		void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+
+	private:
+		SpriteSheet mSheet;
+		InputSystem::Bind mBind;
+		bool mPressed;
 	};
 }

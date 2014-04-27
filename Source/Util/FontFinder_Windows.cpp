@@ -116,20 +116,29 @@ namespace
 
 		return std::string(wsFontFile.begin(), wsFontFile.end());
 	}
+
+	sf::Font* default = nullptr;
 }
 
 void FontFinder::init()
 {
-
+	if (!default)
+		findDefaultFont();
 }
 void FontFinder::deinit()
 {
-
+	delete default;
 }
 
 sf::Font FontFinder::findDefaultFont()
 {
-	return findFont("Arial (TrueType)", "Regular");
+	if (!default)
+	{
+		default = new sf::Font();
+		default->loadFromFile(GetSystemFontFile("Arial (TrueType)"));//, "Regular"));
+	}
+
+	return *default;
 }
 
 sf::Font FontFinder::findFont(const std::string& wildcard, const std::string& styleWildcard)

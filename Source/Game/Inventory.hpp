@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/System/Vector2.hpp>
+#include <vector>
 
 class Item;
 
@@ -13,5 +14,5 @@ public:
 private:
 	double mWeightLimit;
 	sf::Vector2u mSlots;
-
+	std::vector<Item*> mItems;
 };

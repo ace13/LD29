@@ -1,77 +1,13 @@
 #include "KeybindingPage.hpp"
 #include "../MenuState.hpp"
 #include "../InputSystem.hpp"
+#include "../Util/ShapeDraw.hpp"
 
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Window/Event.hpp>
 
-namespace
-{
-	std::string getKeyName(sf::Keyboard::Key k)
-	{
-#define K(key) case sf::Keyboard::key: return #key
-		switch (k)
-		{
-			K(A); K(B); K(C); K(D); K(E); K(F); K(G); K(H); K(I); K(J); K(K); K(L); K(M); K(N);
-			K(O); K(P); K(Q); K(R); K(S); K(T); K(U); K(V); K(W); K(X); K(Y); K(Z); K(Num0);
-			K(Num1); K(Num2); K(Num3); K(Num4); K(Num5); K(Num6); K(Num7); K(Num8); K(Num9);
-			K(Escape); K(LControl); K(LShift); K(LAlt); K(LSystem); K(RControl); K(RShift);
-			K(RAlt); K(RSystem); K(Menu); K(LBracket); K(RBracket); K(SemiColon); K(Comma);
-			K(Period); K(Quote); K(Slash); K(BackSlash); K(Tilde); K(Equal); K(Dash); K(Space);
-			K(Return); K(BackSpace); K(Tab); K(PageUp); K(PageDown); K(End); K(Home); K(Insert);
-			K(Delete); K(Add); K(Subtract); K(Multiply); K(Divide); K(Left); K(Right); K(Up);
-			K(Down); K(Numpad0); K(Numpad1); K(Numpad2); K(Numpad3); K(Numpad4); K(Numpad5);
-			K(Numpad6); K(Numpad7); K(Numpad8); K(Numpad9); K(F1); K(F2); K(F3); K(F4); K(F5);
-			K(F6); K(F7); K(F8); K(F9); K(F10); K(F11); K(F12); K(F13); K(F14); K(F15); K(Pause);
-		default:
-			return "";
-		}
-#undef K
-	}
-
-	std::string getAxisName(sf::Joystick::Axis a, bool neg)
-	{
-		switch (a)
-		{
-		case sf::Joystick::Axis::X:
-			return std::string("LS X") + (neg ? "-" : "+");
-		case sf::Joystick::Axis::Y:
-			return std::string("LS Y") + (neg ? "-" : "+");
-		case sf::Joystick::Axis::R:
-			return std::string("RS X") + (neg ? "-" : "+");
-		case sf::Joystick::Axis::U:
-			return std::string("RS Y") + (neg ? "-" : "+");
-		case sf::Joystick::Axis::Z:
-			return (neg ? "RT" : "LT");
-		case sf::Joystick::Axis::V:
-			return std::string("V") + (neg ? "-" : "+");
-		case sf::Joystick::Axis::PovX:
-			return std::string("POV X") + (neg ? "-" : "+");
-		case sf::Joystick::Axis::PovY:
-			return std::string("POV Y") + (neg ? "-" : "+");
-		}
-	}
-
-	std::string getButtonName(uint32_t b)
-	{
-		switch (b)
-		{
-		case 0: return "A";
-		case 1: return "B";
-		case 2: return "X";
-		case 3: return "Y";
-		case 4: return "LB";
-		case 5: return "RB";
-		case 6: return "Back";
-		case 7: return "Start";
-		case 8: return "LS";
-		case 9: return "RS";
-		}
-	}
-}
-
-KeybindingPage::KeybindingPage(MenuState* state) : MenuPage(state)
+KeybindingPage::KeybindingPage(MenuState* state) : MenuPage(state), mAnim(0)
 {
 	auto binds = state->getInputs().getValidBinds();
 	
@@ -120,6 +56,8 @@ void KeybindingPage::handleEvent(const sf::Event& ev)
 
 void KeybindingPage::update(double dt)
 {
+	mAnim += dt;
+
 	if (!mRebinding.empty())
 		return;
 
@@ -156,41 +94,32 @@ void KeybindingPage::draw(sf::RenderTarget& target)
 		menuEntry.move(0, ((int)(mEntries.size() / 2) - mSelectedIndex) * textHeight);
 
 	std::string selectedEntry = mSelectedEntry;
+	Shapes::BoundInput inpShape;
 
 	int i = 0;
-	std::for_each(mEntries.begin(), mEntries.end(), [&target, &menuEntry, this, textHeight, &i](const std::pair<std::string, std::function<void()> >& it) {
+	std::for_each(mEntries.begin(), mEntries.end(), [&target, &menuEntry, this, textHeight, &i, &inpShape](const std::pair<std::string, std::function<void()> >& it) {
 		menuEntry.setColor(sf::Color::White);
 		menuEntry.setString(it.first);
 
 		if (mSelectedEntry == it.first)
 			menuEntry.setColor(sf::Color::Yellow);
+		if (mRebinding == it.first)
+			menuEntry.setColor(sf::Color(255, 127, 0));
 
 		target.draw(menuEntry);
 
 		if (i < mEntries.size() - 1)
 		{
 			auto pos = menuEntry.getPosition();
-			menuEntry.setPosition(pos.x + 125, pos.y);
-
-			if (mRebinding == it.first)
-				menuEntry.setColor(sf::Color(255, 127, 0));
-
 			auto inp = mMenuState->getInputs()[it.first];
-			switch (inp.getType())
-			{
-			case InputSystem::Bind::Type_Keyboard:
-				menuEntry.setString(getKeyName((sf::Keyboard::Key)inp.getData().Keyboard.Key));
-				break;
-			case InputSystem::Bind::Type_JoyAxis:
-				menuEntry.setString(getAxisName((sf::Joystick::Axis)inp.getData().JoyAxis.Axis, inp.getData().JoyAxis.Negative));
-				break;
-			case InputSystem::Bind::Type_JoyButton:
-				menuEntry.setString(getButtonName(inp.getData().JoyButton.Button));
-				break;
-			}
-			target.draw(menuEntry);
+			inpShape.setBind(inp);
 
-			menuEntry.setPosition(pos);
+			if ((int)mAnim % 2 == 0)
+				inpShape.setPressed(true);
+
+			inpShape.setPosition(pos.x + 125, pos.y);
+
+			target.draw(inpShape);
 		}
 
 		menuEntry.move(0, textHeight + ENTRY_PADDING);

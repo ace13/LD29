@@ -38,6 +38,7 @@ void Player::update(double dt)
 	{
 		if (mInp["Cancel"].pressed())
 		{
+			mInBuilding->doorOpen();
 			mInBuilding->mPlayer = nullptr;
 			mInBuilding = nullptr;
 		}
@@ -45,6 +46,7 @@ void Player::update(double dt)
 		{
 			if (mInBuilding->mSelectedEntry == 0)
 			{
+				mInBuilding->doorOpen();
 				mInBuilding->mPlayer = nullptr;
 				mInBuilding = nullptr;
 			}

@@ -13,6 +13,7 @@ public:
 	virtual void draw(sf::RenderTarget& target);
 
 private:
+	double mAnim;
 	uint8_t mSoundVol, mMusicVol;
 	std::string mRebinding;
 };
