@@ -18,7 +18,7 @@ std::vector<std::string> Recipes::getAllRecipes()
 	std::vector<std::string> ret;
 	ret.reserve(sRecipes.size());
 
-	for (auto& it = sRecipes.begin(); it != sRecipes.end(); ++it)
+	for (auto it = sRecipes.begin(); it != sRecipes.end(); ++it)
 		ret.push_back(it->first);
 
 	return ret;
