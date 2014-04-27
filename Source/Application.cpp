@@ -41,8 +41,11 @@ int Application::run()
 
 	auto framePoint = std::chrono::high_resolution_clock::now();
 
+	sf::Clock fallback;
+
 	while (mWindow.isOpen())
 	{
+		auto dt = std::min(0.10f, fallback.restart().asSeconds());
 		auto newFrame = std::chrono::high_resolution_clock::now();
 		std::chrono::nanoseconds frameTime = std::chrono::duration_cast<std::chrono::nanoseconds>(newFrame - framePoint);
 		framePoint = newFrame;
@@ -66,7 +69,7 @@ int Application::run()
 			mState.handleEvent(ev);
 		}
 			
-		double dt = std::min(0.10, std::chrono::duration<double, std::ratio<1>>(frameTime).count());
+		//double dt = std::min(0.10, std::chrono::duration<double, std::ratio<1>>(frameTime).count());
 		mInput.update(dt);
 		mState.update(dt);
 
