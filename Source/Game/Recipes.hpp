@@ -19,7 +19,7 @@ public:
 	
 	static std::vector<std::string> getAllRecipes();
 	static std::vector<std::pair<std::string, float>> getRecipeCost(const std::string& name);
-	static Item* followRecipe(const std::string& name);
+	static Item* followRecipe(const std::string& name, Item* old = nullptr);
 
 	static size_t getRecipeCount();
 

@@ -36,7 +36,7 @@ void Ladder::draw(sf::RenderTarget& target)
 	target.draw(sprite);
 }
 
-Ladder::LadderItem::LadderItem() : mAmount(0)
+Ladder::LadderItem::LadderItem() : mAmount(1)
 {
 	mTexture.loadFromFile("ladder.png");
 }

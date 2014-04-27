@@ -26,7 +26,7 @@ private:
 	InputSystem& mInp;
 	sf::Vector2f mPosition, mSpeed;
 	float mFallSpeed, mAnim;
-	bool mOnGround;
+	bool mOnGround, mOnLadder;
 
 	Building* mInBuilding;
 };

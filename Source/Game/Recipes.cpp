@@ -1,4 +1,5 @@
 #include "Recipes.hpp"
+#include "Item.hpp"
 #include <algorithm>
 
 std::unordered_map<std::string, std::pair<std::vector<std::pair<std::string, float>>, std::function<Item*()>>> Recipes::sRecipes;
@@ -29,9 +30,20 @@ std::vector<std::pair<std::string, float>> Recipes::getRecipeCost(const std::str
 	return sRecipes.at(name).first;
 }
 
-Item* Recipes::followRecipe(const std::string& name)
+Item* Recipes::followRecipe(const std::string& name, Item* old)
 {
-	return sRecipes.at(name).second();
+	if (old)
+	{
+		auto temp = sRecipes.at(name).second();
+		old->addAmount(temp->getAmount());
+		delete temp;
+
+		return old;
+	}
+	else
+	{
+		return sRecipes.at(name).second();
+	}
 }
 
 size_t Recipes::getRecipeCount()

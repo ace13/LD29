@@ -11,8 +11,9 @@ public:
 
 	void addAmount(float amount) { mAmount += amount; }
 	inline float getAmount() const { return mAmount; }
+	void removeAmount(float amount) { mAmount -= amount; }
 
-	inline float getWeight() const { return mAmount * 5; }
+	inline float getWeight() const { return mAmount; }
 	inline float maxWeight() const { return 50; }
 	inline std::string getName() const;
 

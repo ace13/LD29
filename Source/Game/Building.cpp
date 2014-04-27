@@ -249,14 +249,35 @@ void Building::drawMenu(sf::RenderTarget& target, MenuType type)
 
 			background.setPosition(infoText.getPosition());
 			
-			if (i++ == mSelectedInventorySlot)
+			if (i == mSelectedInventorySlot)
 				target.draw(background);
 
 			target.draw(infoText);
 
 			if (i++ == mSelectedInventorySlot)
 			{
+				auto costs = Recipes::getRecipeCost(recipe);
+
+				auto oldPos = infoText.getPosition();
+				infoText.setPosition(mPosition + sf::Vector2f(35, -(30.f * 6 + 10)) + sf::Vector2f(40 + 120, 15));
+				infoText.setString("Costs:");
+				target.draw(infoText);
+
+				infoText.move(5, 25);
+
+				for (auto& cost : costs)
+				{
+					std::ostringstream oss;
+					oss << std::setprecision(2) << cost.second << " kg of " << cost.first;
+
+					infoText.setString(oss.str());
+					target.draw(infoText);
+					infoText.move(0, infoText.getLocalBounds().height + 10);
+				}
+
 				// Draw crafting recipe
+
+				infoText.setPosition(oldPos);
 			}
 
 			infoText.move(0, infoText.getLocalBounds().height + 10);

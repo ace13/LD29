@@ -12,6 +12,7 @@
 #include "Items/MinedOre.hpp"
 #include "Items/Wood.hpp"
 #include "Recipes.hpp"
+#include "Ladder.hpp"
 
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Sprite.hpp>
@@ -112,6 +113,57 @@ void Player::update(double dt)
 					mInBuilding->mInventory.removeItem(item);
 				}
 				break;
+
+			case Building::Menu_Crafting:
+				{
+					auto recipes = Recipes::getAllRecipes();
+					
+					auto selected = recipes[mInBuilding->mSelectedInventorySlot];
+					auto costs = Recipes::getRecipeCost(selected);
+
+					bool hasAll = true;
+					for (auto& c : costs)
+					{
+						auto item = mInBuilding->mInventory.getItem(c.first);
+
+						if (!item)
+						{
+							hasAll = false;
+							break;
+						}
+							
+						if (item->getWeight() < c.second)
+						{
+							hasAll = false;
+							break;
+						}
+					}
+
+					if (hasAll)
+					{
+						for (auto& c : costs)
+						{
+							auto item = mInBuilding->mInventory.getItem(c.first);
+							item->removeAmount(c.second);
+						}
+
+						auto item = Recipes::followRecipe(selected);
+						
+						auto pInv = mInventory.getItem();
+						if (pInv && pInv->getName() == item->getName())
+						{
+							pInv->addAmount(item->getAmount());
+							delete item;
+							item = nullptr;
+						}		
+						else if (!pInv)
+						{
+							mInventory.addItem(item);
+						}
+						else
+							mInBuilding->mInventory.addItem(item);
+					}
+				} break;
 			}
 			
 		}
@@ -223,6 +275,23 @@ void Player::update(double dt)
 
 		sf::FloatRect rect(mPosition.x - 15, mPosition.y - 15, 30, 30);
 
+		if (mOnLadder)
+		{
+			mOnGround = true;
+			mFallSpeed = 0;
+
+			if (mInp["Dig"].curValue() < 0.5)
+			{
+				float vertMove = mInp["Down"].curValue() - mInp["Up"].curValue();
+				mSpeed.y = vertMove;
+			}
+			else
+				mSpeed.y = 0;
+		}
+		else
+			mSpeed.y = 0;
+
+		mOnLadder = false;
 		for (auto act : test)
 		{
 			if (typeid(*act) == typeid(Ground&))
@@ -250,11 +319,29 @@ void Player::update(double dt)
 						if (std::abs(pos.x - mPosition.x) < 27)
 						{
 							if (mFallSpeed >= 0)
+							{
 								mOnGround = true;
+								if (mSpeed.y > 0)
+									mSpeed.y = 0;
+							}
 						}
 					}
 					else if (pos.y < mPosition.y && std::abs(pos.x - mPosition.x) < 27 && mFallSpeed < 0)
+					{
 						mFallSpeed = 0;
+						if (mSpeed.y < 0)
+							mSpeed.y = 0;
+					}
+				}
+			}
+			if (typeid(*act) == typeid(Ladder&) && !mOnLadder)
+			{
+				auto pos = act->getPosition();
+				sf::FloatRect actRect(pos.x - 15, pos.y - 15, 30, 30);
+				
+				if (actRect.intersects(rect))
+				{
+					mOnLadder = true;
 				}
 			}
 		}
@@ -296,7 +383,7 @@ void Player::update(double dt)
 							continue;
 
 						ore->removeAmount(dt);
-						mined->addAmount(dt);
+						mined->addAmount(dt * 5.f);
 					}
 					else
 					{
@@ -315,14 +402,16 @@ void Player::update(double dt)
 					if (!wood)
 						continue;
 
-					((Tree*)act)->chop(dt);
-					wood->addAmount(dt);
+					((Tree*)act)->chop(dt * 2);
+					wood->addAmount(dt * 2);
 				}
 			}
 		}
 
 		if (mInp["Use"].pressed())
 		{
+			bool found = false;
+
 			for (auto act : test)
 			{
 				if (typeid(*act) == typeid(Building&))
@@ -333,12 +422,47 @@ void Player::update(double dt)
 					mInBuilding->mMenuAnim = 0;
 					mInBuilding->doorOpen();
 					mSpeed = sf::Vector2f();
+
+					found = true;
+					break;
 				}
 			}
-		}
-		else if (mInp["Use"].curValue() > 0.4)
-		{
 
+			if (!found)
+			{
+				auto item = mInventory.getItem();
+
+				if (typeid(*item) == typeid(Ladder::LadderItem&) && item->getAmount() > 0)
+				{
+					Ladder* l = new Ladder();
+					l->setPosition((sf::Vector2f)(((sf::Vector2i)((mPosition) / 30.f)) * 30) - sf::Vector2f(15, 15));
+
+					auto found = mQT->getAllActors(sf::FloatRect(l->getPosition().x - 10, l->getPosition().y - 10, 20, 20));
+
+					for (auto act : found)
+					{
+						if (typeid(*act) == typeid(Ladder&))
+						{
+							delete l;
+							l = nullptr;
+							break;
+						}
+					}
+
+					if (l)
+					{
+						mQT->addActor(l);
+
+						item->removeAmount(1);
+
+						if (item->getAmount() <= 0)
+						{
+							mInventory.removeItem(item);
+							delete item;
+						}
+					}
+				}
+			}
 		}
 
 		// Sanitize position

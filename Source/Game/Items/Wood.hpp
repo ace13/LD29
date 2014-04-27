@@ -10,6 +10,7 @@ public:
 
 	void addAmount(float amount);
 	inline float getAmount() const { return mAmount; }
+	void removeAmount(float amount) { mAmount -= amount; }
 
 	inline float getWeight() const { return mAmount; }
 	inline float maxWeight() const { return 50; }

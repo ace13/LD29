@@ -10,6 +10,7 @@ public:
 	virtual ~Item() { }
 
 	virtual void addAmount(float amount) = 0;
+	virtual void removeAmount(float amount) = 0;
 	virtual float getAmount() const = 0;
 
 	virtual float getWeight() const = 0;
