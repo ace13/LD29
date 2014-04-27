@@ -21,7 +21,7 @@ private:
 	SpriteSheet mSheet;
 	InputSystem& mInp;
 	sf::Vector2f mPosition, mSpeed;
-	float mFallSpeed;
+	float mFallSpeed, mAnim;
 	bool mOnGround;
 
 	Building* mInBuilding;

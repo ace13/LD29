@@ -12,7 +12,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 
-Player::Player(InputSystem& sys) : mInp(sys), mOnGround(false), mFallSpeed(0), mInBuilding(nullptr)
+Player::Player(InputSystem& sys) : mInp(sys), mOnGround(false), mFallSpeed(0), mAnim(0), mInBuilding(nullptr)
 {
 	mSheet = Resources::SpriteSheets["player.png"];
 }
@@ -79,6 +79,8 @@ void Player::update(double dt)
 	}
 	else
 	{
+		mAnim += dt;
+
 		sf::Vector2f moveSpeed;
 		if (mInp["Dig"].curValue() < 0.5)
 			moveSpeed = sf::Vector2f(mInp["Right"].curValue() - mInp["Left"].curValue(), 0);
@@ -201,7 +203,26 @@ void Player::draw(sf::RenderTarget& target)
 	else
 	{
 		sf::Sprite sprite(mSheet.getTexture());
-		sprite.setTextureRect(mSheet.getRect(0, 0));
+		sprite.setTextureRect(mSheet.getRect(0, (int)mAnim % 2 == 0));
+
+		if (mInp["Dig"].curValue() > 0.5)
+		{
+			sf::Vector2f digDir(mInp["Right"].curValue() - mInp["Left"].curValue(), mInp["Down"].curValue() - mInp["Up"].curValue());
+			if ((digDir.x * digDir.x + digDir.y * digDir.y) > 0.25)
+			{
+				sprite.setTextureRect(mSheet.getRect(1 + (int)mAnim % 4, 1));
+
+				if (digDir.x < 0)
+					sprite.setScale(-1, 1);
+			}
+		}
+		else if (std::abs(mSpeed.x) > 0.1)
+		{
+			sprite.setTextureRect(mSheet.getRect(1 + (int)mAnim % 4, 0));
+			if (mSpeed.x < 0)
+				sprite.setScale(-1, 1);
+		}
+		
 		sprite.setOrigin(15, 15);
 
 		sprite.setPosition(mPosition);
