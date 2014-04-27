@@ -28,11 +28,11 @@ void Arc::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	states.transform *= getTransform();
 
-	float aa = 1;
+	float aa = 0.25;
 	auto pos = sf::Vector2f(mRadius, mRadius);
 
-	sf::RectangleShape rect(sf::Vector2f(mLineThickness, aa * 2));
-	rect.setOrigin(sf::Vector2f(mLineThickness / 2, aa));
+	sf::RectangleShape rect(sf::Vector2f(mLineThickness, aa * 5));
+	rect.setOrigin(sf::Vector2f(mLineThickness / 2, aa * 2.5));
 	rect.setFillColor(mColor);
 	
 	for (float i = mStartAngle; i < mEndAngle; i += aa)
@@ -63,7 +63,7 @@ void RadialProgressBar::setCaching(bool cache)
 
 	if (mDoTextureCaching)
 	{
-		mTextureCache.create(mRadius * 2 + mThickness * 2 + mOutlineThickness * 2, mRadius * 2 + mThickness * 2 + mOutlineThickness * 2);
+		mTextureCache.create(mRadius * 2 + mThickness + mOutlineThickness, mRadius * 2 + mThickness + mOutlineThickness);
 		mTextureCache.clear(sf::Color::Transparent);
 
 		draw(mTextureCache, sf::RenderStates(sf::BlendMode::BlendAlpha));
@@ -110,7 +110,7 @@ void RadialProgressBar::draw(sf::RenderTarget& target, sf::RenderStates states) 
 
 		Arc arc;
 
-		arc.move(mRadius, mRadius);
+		arc.move(mThickness / 2 + mOutlineThickness / 2, mThickness / 2 + mOutlineThickness / 2);
 
 		arc.setLineThickness(mThickness);
 		arc.setRadius(mRadius);
@@ -129,7 +129,7 @@ void RadialProgressBar::draw(sf::RenderTarget& target, sf::RenderStates states) 
 
 		sf::CircleShape outline(mRadius - mThickness / 2.f);
 
-		outline.move(mThickness / 2.f + mRadius, mThickness / 2.f + mRadius);
+		outline.move(mThickness + mOutlineThickness / 2, mThickness + mOutlineThickness / 2);
 
 		outline.setFillColor(sf::Color::Transparent);
 		outline.setOutlineColor(mOutlineColor);

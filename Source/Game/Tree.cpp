@@ -4,7 +4,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <random>
 
-Tree::Tree()
+Tree::Tree() : mResources(0)
 {
 	mSheet = Resources::SpriteSheets["tree.png"];
 
@@ -26,6 +26,8 @@ Tree::Tree()
 		dist = std::uniform_int_distribution<int>(2, 4);
 		mCrownLength = dist(rd);
 	}
+
+	mResources = (mStemLength + mCrownLength);
 }
 
 Tree::~Tree()
@@ -33,11 +35,16 @@ Tree::~Tree()
 
 }
 
-void Tree::chop()
+void Tree::chop(float dt)
 {
-	mQTLeaf->removeActor(this);
-	mQTLeaf = nullptr;
-	mQT = nullptr;
+	mResources -= dt;
+
+	if (mResources <= 0)
+	{
+		mQTLeaf->removeActor(this);
+		mQTLeaf = nullptr;
+		mQT = nullptr;
+	}
 }
 
 void Tree::update(double dt)

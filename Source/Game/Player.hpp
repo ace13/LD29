@@ -16,6 +16,7 @@ public:
 
 	void update(double dt);
 	void draw(sf::RenderTarget& target);
+	void drawUi(sf::RenderTarget& target);
 
 private:
 	SpriteSheet mSheet;

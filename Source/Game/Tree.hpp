@@ -15,11 +15,12 @@ public:
 	void setPosition(const sf::Vector2f& pos);
 	sf::Vector2f getPosition() const;
 
-	void chop();
+	void chop(float dt);
 	void draw(sf::RenderTarget& target);
 	void update(double dt);
 
 private:
+	float mResources;
 	sf::Vector2f mPos;
 	uint8_t mStemLength, mCrownLength;
 	SpriteSheet mSheet;

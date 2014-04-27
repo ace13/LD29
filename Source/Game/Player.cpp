@@ -11,6 +11,7 @@
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
 
 Player::Player(InputSystem& sys) : mInp(sys), mOnGround(false), mFallSpeed(0), mAnim(0), mInBuilding(nullptr)
 {
@@ -161,7 +162,7 @@ void Player::update(double dt)
 				}
 				else if (typeid(*act) == typeid(Tree&))
 				{
-					((Tree*)act)->chop();
+					((Tree*)act)->chop(dt);
 				}
 			}
 		}
@@ -258,4 +259,26 @@ void Player::draw(sf::RenderTarget& target)
 			}
 		}
 	}
+}
+
+void Player::drawUi(sf::RenderTarget& target)
+{
+	const float UI_RADIUS = 46;
+
+	sf::CircleShape shape(UI_RADIUS);
+	shape.setOrigin(UI_RADIUS, UI_RADIUS);
+	shape.setFillColor(sf::Color::Black);
+
+	Shapes::RadialProgressBar prog;
+
+	prog.setRadius(UI_RADIUS);
+	prog.setBackgroundColor(sf::Color(0, 175, 0));
+	prog.setForegroundColor(sf::Color(0, 200, 0));
+	prog.setValue(0.5);
+
+	prog.setOrigin(UI_RADIUS + prog.getThickness() / 2.f, UI_RADIUS + prog.getThickness() / 2.f);
+	prog.setPosition(UI_RADIUS + 25, target.getView().getSize().y - UI_RADIUS - 25);
+	shape.setPosition(UI_RADIUS + 25, target.getView().getSize().y - UI_RADIUS - 25);
+	target.draw(shape);
+	target.draw(prog);
 }

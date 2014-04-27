@@ -3,7 +3,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Text.hpp>
 
-#include "Game/Actor.hpp"
+#include "Game/Player.hpp"
 #include "InputSystem.hpp"
 #include "MenuState.hpp"
 #include "Util/FontFinder.hpp"
@@ -74,5 +74,6 @@ void GameState::draw(sf::RenderTarget& target)
 
 	target.setView(uiView);
 
+	mWorld.getPlayer()->drawUi(target);
 	///\TODO UI Drawing goes here
 }
