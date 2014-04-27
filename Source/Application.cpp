@@ -78,7 +78,7 @@ int Application::run()
 			
 		mState.draw(mWindow);
 
-		
+		/*
 		{
 			std::ostringstream ss;
 			ss << mStats.getSmoothFPS() << " FPS\n" << mStats.getSmoothFrameTime() << "ms";
@@ -91,7 +91,7 @@ int Application::run()
 
 			mWindow.draw(frameInfo);
 		}
-		
+		*/
 
 		mWindow.display();
 
