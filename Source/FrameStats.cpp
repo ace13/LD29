@@ -65,16 +65,16 @@ double FrameStats::getFrameTime() const
 
 double FrameStats::getSmoothFrameTime() const
 {
-	std::chrono::high_resolution_clock::duration temp;
+	std::chrono::nanoseconds temp;
 
-	std::for_each(mFrameTimes.begin(), mFrameTimes.end(), [&temp](const std::chrono::high_resolution_clock::duration& it) {
+	std::for_each(mFrameTimes.begin(), mFrameTimes.end(), [&temp](const std::chrono::nanoseconds& it) {
 		temp += it;
 	});
 
 	return std::chrono::duration_cast<std::chrono::duration<double, std::milli>>(temp / mFrameTimes.size()).count();
 }
 
-void FrameStats::frame(const std::chrono::high_resolution_clock::duration& duration)
+void FrameStats::frame(std::chrono::nanoseconds duration)
 {
 	++mCurFPS;
 	mCurrentTime += duration;

@@ -31,14 +31,14 @@ public:
 	double getFrameTime() const;
 	double getSmoothFrameTime() const;
 
-	void frame(const std::chrono::high_resolution_clock::duration& duration);
+	void frame(std::chrono::nanoseconds duration);
 
 private:
-	std::list<std::chrono::high_resolution_clock::duration> mFrameTimes;
+	std::list<std::chrono::nanoseconds> mFrameTimes;
 	std::list<uint32_t> mFPSes;
 
 	uint32_t mCurFPS;
-	std::chrono::high_resolution_clock::duration mCurrentTime;
+	std::chrono::nanoseconds mCurrentTime;
 
 	Smoothing mSmoothFactor;
 };
