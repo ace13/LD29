@@ -23,10 +23,12 @@ set(Base_HEADERS
 set(Game_SOURCES
 	Game/Building.cpp
 	Game/Ground.cpp
+	Game/Inventory.cpp
+	Game/Item.cpp
+	Game/Ladder.cpp
 	Game/Ore.cpp
 	Game/Player.cpp
 	Game/QuadTree.cpp
-	Game/Tool.cpp
 	Game/Tree.cpp
 	Game/World.cpp
 )
@@ -35,12 +37,28 @@ set(Game_HEADERS
 	Game/Actor.hpp
 	Game/Building.hpp
 	Game/Ground.hpp
+	Game/Inventory.hpp
+	Game/Item.hpp
+	Game/Ladder.hpp
 	Game/Ore.hpp
 	Game/Player.hpp
 	Game/QuadTree.hpp
-	Game/Tool.hpp
 	Game/Tree.hpp
 	Game/World.hpp
+)
+
+set(Item_SOURCES
+	Game/Items/ConstructionKit.cpp
+	Game/Items/MinedOre.cpp
+	Game/Items/Tool.cpp
+	Game/Items/Wood.cpp	
+)
+
+set(Item_HEADERS
+	Game/Items/ConstructionKit.hpp
+	Game/Items/MinedOre.hpp
+	Game/Items/Tool.hpp
+	Game/Items/Wood.hpp	
 )
 
 set(Menu_SOURCES
@@ -91,10 +109,11 @@ set(Util_HEADERS
 
 source_group(Base FILES ${Base_SOURCES} ${Base_HEADERS})
 source_group(Game FILES ${Game_SOURCES} ${Game_HEADERS})
+source_group(Game\\Items FILES ${Item_SOURCES} ${Item_HEADERS})
 source_group(Menu FILES ${Menu_SOURCES} ${Menu_HEADERS})
 source_group(Util FILES ${Util_SOURCES} ${Util_HEADERS})
 
-add_executable(LD29 main.cpp ${Base_SOURCES} ${Base_HEADERS} ${Game_SOURCES} ${Game_HEADERS} ${Menu_SOURCES} ${Menu_HEADERS} ${Util_SOURCES} ${Util_HEADERS})
+add_executable(LD29 main.cpp ${Base_SOURCES} ${Base_HEADERS} ${Game_SOURCES} ${Game_HEADERS} ${Item_SOURCES} ${Item_HEADERS} ${Menu_SOURCES} ${Menu_HEADERS} ${Util_SOURCES} ${Util_HEADERS})
 if (WIN32)
 	target_link_libraries(LD29 ${SFML_LIBRARIES})
 else()

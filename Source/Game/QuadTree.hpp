@@ -19,7 +19,7 @@ public:
 	virtual QuadTreeLeaf* addActor(Actor* actor) = 0;
 	virtual void removeActor(Actor* actor) = 0;
 	virtual std::vector<Actor*> getAllActors() const = 0;
-	virtual std::vector<Actor*> getAllActors(sf::FloatRect bounds) const = 0;
+	virtual std::vector<Actor*> getAllActors(const sf::FloatRect& bounds) const = 0;
 
 	virtual bool update() = 0;
 
@@ -47,7 +47,7 @@ public:
 	QuadTreeLeaf* addActor(Actor* actor);
 	void removeActor(Actor* actor);
 	std::vector<Actor*> getAllActors() const;
-	std::vector<Actor*> getAllActors(sf::FloatRect bounds) const;
+	std::vector<Actor*> getAllActors(const sf::FloatRect& bounds) const;
 
 	void testSplit();
 
@@ -70,7 +70,7 @@ public:
 	virtual QuadTreeLeaf* addActor(Actor* actor);
 	virtual void removeActor(Actor* actor);
 	virtual std::vector<Actor*> getAllActors() const;
-	virtual std::vector<Actor*> getAllActors(sf::FloatRect bounds) const;
+	virtual std::vector<Actor*> getAllActors(const sf::FloatRect&) const;
 
 	virtual bool update();
 	virtual void draw(sf::RenderTarget& target) const;
@@ -95,7 +95,7 @@ public:
 	virtual QuadTreeLeaf* addActor(Actor* actor);
 	virtual void removeActor(Actor* actor);
 	virtual std::vector<Actor*> getAllActors() const;
-	virtual std::vector<Actor*> getAllActors(sf::FloatRect bounds) const;
+	virtual std::vector<Actor*> getAllActors(const sf::FloatRect&) const;
 
 	virtual bool update();
 	virtual void draw(sf::RenderTarget& target) const;

@@ -45,7 +45,7 @@ std::vector<Actor*> QuadTree::getAllActors() const
 	return mMainLeaf->getAllActors();
 }
 
-std::vector<Actor*> QuadTree::getAllActors(sf::FloatRect bounds) const
+std::vector<Actor*> QuadTree::getAllActors(const sf::FloatRect& bounds) const
 {
 	return mMainLeaf->getAllActors(bounds);
 }
@@ -166,7 +166,7 @@ std::vector<Actor*> SplittableQuadTreeLeaf::getAllActors() const
 	}
 }
 
-std::vector<Actor*> SplittableQuadTreeLeaf::getAllActors(sf::FloatRect bounds) const
+std::vector<Actor*> SplittableQuadTreeLeaf::getAllActors(const sf::FloatRect& bounds) const
 {
 	std::vector<Actor*> temp;
 	auto inserter = std::back_inserter(temp);
@@ -346,7 +346,7 @@ std::vector<Actor*> FinalQuadTreeLeaf::getAllActors() const
 {
 	return mActors;
 }
-std::vector<Actor*> FinalQuadTreeLeaf::getAllActors(sf::FloatRect bounds) const
+std::vector<Actor*> FinalQuadTreeLeaf::getAllActors(const sf::FloatRect& bounds) const
 {
 	std::vector<Actor*> ret;
 	auto insert = std::back_inserter(ret);

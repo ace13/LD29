@@ -88,10 +88,15 @@ bool INIFile::saveToFile(const std::string& file)
 	if (!ofs.is_open())
 		return false;
 
+	int i = 0;
 	for (auto& cat : mData)
 	{
 		if (cat.first != "global")
+		{
+			if (i++ != 0)
+				ofs << std::endl;
 			ofs << "[" << cat.first << "]" << std::endl;
+		}
 
 		for (auto& val : cat.second)
 		{

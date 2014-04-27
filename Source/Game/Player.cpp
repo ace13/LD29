@@ -43,7 +43,15 @@ void Player::update(double dt)
 		}
 		else if (mInp["Accept"].pressed())
 		{
-			
+			if (mInBuilding->mSelectedEntry == 0)
+			{
+				mInBuilding->mPlayer = nullptr;
+				mInBuilding = nullptr;
+			}
+			else
+			{
+
+			}
 		}
 
 		if (mInp["Up"].pressed())
