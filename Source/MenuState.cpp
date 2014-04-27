@@ -93,7 +93,7 @@ void MenuState::draw(sf::RenderTarget& target)
 	rect.setFillColor(sf::Color(0, 0, 0, 200));
 	target.draw(rect);
 
-	sf::Text title("Earth Mining Rage", def, 64U);
+	sf::Text title("N.A.M.E", def, 64U);
 
 	{
 		auto rect = title.getLocalBounds();
@@ -102,6 +102,15 @@ void MenuState::draw(sf::RenderTarget& target)
 
 	title.setPosition(target.getView().getSize().x / 2.f, 0);
 
+	target.draw(title);
+	title.move(0, title.getLocalBounds().height + 10);
+
+	title.setCharacterSize(40U);
+	title.setString("Not your Average Mining Emulator");
+	{
+		auto rect = title.getLocalBounds();
+		title.setOrigin(rect.width / 2.f, 0);
+	}
 	target.draw(title);
 	
 	std::for_each(mMenuStack.begin(), mMenuStack.end(), [&target](std::shared_ptr<MenuPage>& page) { page->draw(target); });
