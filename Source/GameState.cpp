@@ -12,7 +12,7 @@ bool loaded = false;
 
 GameState::GameState()
 {
-	mGameView = sf::View(sf::FloatRect(0, 0, 1000, 1000));
+	mGameView = sf::View(sf::FloatRect(0, 0, 666.f, 750));
 	mGameView.setCenter(0, -15 * WORLD_HEIGHT);
 }
 
@@ -59,7 +59,8 @@ void GameState::draw(sf::RenderTarget& target)
 
 	{
 		auto size = target.getSize();
-		mGameView.setSize(1000.f, 1000.f * ((float)size.y / size.x));
+		auto gSize = mGameView.getSize();
+		mGameView.setSize(gSize.y * ((float)size.x / size.y), gSize.y);
 	}
 
 	auto uiView = target.getView();

@@ -24,7 +24,7 @@ void World::generateWorld(InputSystem& sys)
 	mQuadTree.addActor(p);
 
 	auto b = new Building();
-	b->setPosition(sf::Vector2f(-WORLD_HALFHEIGHT_PIXELS + 15, -WORLD_HALFHEIGHT_PIXELS + GROUND_LEVEL * 30 - 14));
+	b->setPosition(sf::Vector2f(-WORLD_HALFHEIGHT_PIXELS + 45, -WORLD_HALFHEIGHT_PIXELS + GROUND_LEVEL * 30 - 14));
 
 	mQuadTree.addActor(b);
 

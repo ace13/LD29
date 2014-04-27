@@ -3,6 +3,7 @@
 #include "Actor.hpp"
 #include "../Util/SpriteSheet.hpp"
 class InputSystem;
+class Building;
 
 class Player : public Actor
 {
@@ -22,4 +23,6 @@ private:
 	sf::Vector2f mPosition, mSpeed;
 	float mFallSpeed;
 	bool mOnGround;
+
+	Building* mInBuilding;
 };
