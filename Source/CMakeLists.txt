@@ -122,5 +122,5 @@ add_executable(LD29 main.cpp ${Base_SOURCES} ${Base_HEADERS} ${Game_SOURCES} ${G
 if (WIN32)
 	target_link_libraries(LD29 ${SFML_LIBRARIES} opengl32 glu32)
 else()
-	target_link_libraries(LD29 ${SFML_LIBRARIES} ${Fontconfig_LIBRARY} GLU)
+	target_link_libraries(LD29 ${SFML_LIBRARIES} ${Fontconfig_LIBRARY} GLU GL)
 endif()

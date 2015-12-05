@@ -3,7 +3,9 @@
 #include "Tree.hpp"
 #include "Player.hpp"
 #include "Building.hpp"
+
 #include <random>
+#include <typeinfo>
 
 World::World() : mQuadTree(sf::FloatRect(-WORLD_HALFWIDTH_PIXELS, -WORLD_HALFHEIGHT_PIXELS, WORLD_WIDTH_PIXELS, WORLD_HEIGHT_PIXELS), 13)
 {

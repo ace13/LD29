@@ -11,6 +11,8 @@
 #include <SFML/Window/Joystick.hpp>
 #include <SFML/Window/Keyboard.hpp>
 
+#include <typeinfo>
+
 using namespace Shapes;
 
 Arc::Arc() : mStartAngle(0), mEndAngle(360), mRadius(32), mLineThickness(2.f)
@@ -66,7 +68,7 @@ void RadialProgressBar::setCaching(bool cache)
 		mTextureCache.create(mRadius * 2 + mThickness + mOutlineThickness, mRadius * 2 + mThickness + mOutlineThickness);
 		mTextureCache.clear(sf::Color::Transparent);
 
-		draw(mTextureCache, sf::RenderStates(sf::BlendMode::BlendAlpha));
+		draw(mTextureCache, sf::RenderStates(sf::BlendAlpha));
 
 		mTextureCache.display();
 	}
@@ -83,7 +85,7 @@ void RadialProgressBar::setValue(float value)
 	{
 		mTextureCache.clear(sf::Color::Transparent);
 
-		draw(mTextureCache, sf::RenderStates(sf::BlendMode::BlendAlpha));
+		draw(mTextureCache, sf::RenderStates(sf::BlendAlpha));
 
 		mTextureCache.display();
 	}
